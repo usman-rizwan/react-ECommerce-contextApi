@@ -1,0 +1,21 @@
+.d-flex {
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0px auto !important;
+    .login-form {
+        max-width: 300px;
+    }
+    
+    .login-form-forgot {
+        float: right;
+    }
+    
+    .login-form-button {
+        width: 100%;
+    }
+}
+.text-center{
+    text-align: center ;
+    margin-top: 150px;
+}

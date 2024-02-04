@@ -1,42 +1,32 @@
-import { useEffect } from "react";
-import "./App.css";
-import { useFirebase } from "./contexts/firebase";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
+import React, { useState ,useEffect } from "react";
+import AppRouter from "./config/Router";
+import User from "./context";
+import { auth, onAuthStateChanged } from "./db/index";
 
-function App() {
-  const { app, auth, user, setUser } = useFirebase();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const [email, password] = e.target.elements;
-    const emailValue = email.value;
-    const passwordValue = password.value;
-
-    await signInWithEmailAndPassword(auth, emailValue, passwordValue);
-  };
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        console.log("User is signed out");
-      }
-    });
-  }, []);
-
+const App = () => {
+    const [login , setIsLogin] = useState(null)
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const uid = user.uid;
+              setIsLogin(true)
+              // ...
+            } else {
+              // User is signed out
+              // ..
+              setIsLogin(false)
+            }
+          });
+    }, [])
+    
   return (
-    <>
-      {user && JSON.stringify(user, null, 2)}
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
-        <button type="submit">Sign In</button>
-      </form>
-      <Link to={'/dashboard'}>Dashboard</Link>
-    </>
+    <div>
+      <User.Provider value={{login , setIsLogin}}>
+        <AppRouter />
+      </User.Provider>
+    </div>
   );
-}
+};
 
 export default App;
