@@ -79,11 +79,13 @@ const LoginForm = ({loginUser}) => {
           <Button
             type="primary"
             htmlType="submit"
-            className="login-form-button"
+            className="login-form-button bg-blue-500"
           >
             Log in
           </Button>
-          Or <span > <Link to={'/signup'}> Register  now!</Link> </span>
+          <div className="flex justify-center">
+          Or <span className="ml-2 text-blue-400" > <Link to={'/signup'}> Register  now!</Link> </span>
+          </div>
         </Form.Item>
       </Form>
     </div>

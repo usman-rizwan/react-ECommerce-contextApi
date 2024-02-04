@@ -28,8 +28,7 @@ const RegisterPage = () => {
   //   return a
   // }, []);
 
-  const checkUser = useContext(User);
-console.log(checkUser);
+ 
   let registerUser = ({ email, password }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -47,6 +46,7 @@ console.log(checkUser);
   };
 
   return (
+  
     <>
       <SignupForm registerUser={registerUser} />
       {/* <form onSubmit={handleSubmit}>
