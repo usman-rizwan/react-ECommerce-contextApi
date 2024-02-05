@@ -43,11 +43,11 @@ console.log(status)
       <NavbarContent justify="end">
         <NavbarItem >
             {status ? 
-             <Button className="bg-red-500 text-white" onClick={()=>logOut()} >
+             <Button  className="text-tiny bg-red-600 text-white p-4" variant="shadow"  radius="full" size="sm" onClick={()=>logOut()} >
           Logout
              </Button>
 :
-          <RLink className="bg-blue-500 p-2 text-white rounded"  to={'/login'} >Login</RLink>
+          <RLink className="bg-blue-500 text-tiny px-4 py-2  text-white rounded-lg"  to={'/login'} >Login</RLink>
             }
         </NavbarItem>
         {/* <NavbarItem>

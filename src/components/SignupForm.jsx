@@ -10,7 +10,7 @@ const onFinishFailed = (errorInfo) => {
 const SignupForm = ({registerUser}) => {
     return (
         <>
-        <h1 className="text-center">Signup Form</h1>
+       <h1 className="text-center text-2xl font-bold" >Signup Form</h1>
         <div className="d-flex">
           <Form
             name="trigger"
@@ -78,7 +78,7 @@ const SignupForm = ({registerUser}) => {
               >
                 Sign In
               </Button>
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-5">
                 
              
               Or <span className="ml-2 text-blue-400" > <Link to={'/login'}> Login   now!</Link> </span>
