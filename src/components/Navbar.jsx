@@ -1,14 +1,18 @@
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button ,NavbarMenuItem,NavbarMenuToggle,NavbarMenu} from "@nextui-org/react";
-import { Link as RLink } from "react-router-dom";
+import { Link as RLink  , useSearchParams} from "react-router-dom";
+
 
 export default function AppNavbar({status , logOut}) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-console.log(status)
-  const menuItems = [
-    "Jewellwery",
-    
-  ];
+  let [searchParams, setSearchParams] = useSearchParams();
+// console.log(status)
+  const navItems = [
+    "electronics",
+    "jewelery",
+    "men's clothing",
+    "women's clothing"
+    ]
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -24,21 +28,7 @@ console.log(status)
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
+        {navItems.map((v,i)=><NavbarItem className="capitalize cursor-pointer text-lg transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none hover:underline hover:text-blue-600 hover:font-bold"  key={i} onClick={()=>setSearchParams({categories:v})}> {v} </NavbarItem>)}
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem >
@@ -57,14 +47,15 @@ console.log(status)
         </NavbarItem> */}
       </NavbarContent>
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+        {navItems.map((item, index) => (
+          <NavbarMenuItem key={`${item}-${index}`} className="cursor-pointer">
             <Link
+            onClick={()=>setSearchParams({categories: item})}
               color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
+                index === 2 ? "primary" : index === navItems.length - 1 ? "danger" : "foreground"
               }
               className="w-full"
-              href="#"
+             
               size="lg"
             >
               {item}

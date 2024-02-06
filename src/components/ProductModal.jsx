@@ -66,7 +66,6 @@ export default function ProductModal({ id }) {
             <>
               <ModalHeader className="flex flex-col gap-1">
               {loading ? <img  className="w-50 h-40 object-contain rounded-lg"  src={ImageLoading} />  :  <div className=" flex justify-center items-center"><Image
-              className=" w-full h-[160px] object-contain "
       width={200}
       src={productDetails.image}
       preview={{
@@ -114,4 +113,3 @@ export default function ProductModal({ id }) {
     </>
   );
 }
-
