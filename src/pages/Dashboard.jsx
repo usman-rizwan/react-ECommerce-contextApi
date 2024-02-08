@@ -10,6 +10,7 @@ import {useSearchParams} from 'react-router-dom'
 
 
 const Dashboard = () => {
+  
   const [products ,setProducts]  = useState([])
   const [loading ,setLoading] = useState(true)
   let [searchParams, setSearchParams] = useSearchParams();
@@ -24,14 +25,17 @@ const Dashboard = () => {
       console.log(err);
       setLoading(false); 
     });
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+
+
   useEffect(() => {
    const category = searchParams.get('categories')
-   if (category){
+   if (category && category !== "all"){
     axios(`https://fakestoreapi.com/products/category/${category}`)
     .then((res)=>{
       setProducts(res.data);

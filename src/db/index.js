@@ -1,16 +1,18 @@
 import { initializeApp } from "firebase/app";
-import {getAuth , createUserWithEmailAndPassword ,signInWithEmailAndPassword , onAuthStateChanged ,signOut } from "firebase/auth"
+import {getAuth , createUserWithEmailAndPassword ,signInWithEmailAndPassword , onAuthStateChanged ,signOut } from "firebase/auth";
+import { doc, setDoc ,getFirestore } from "firebase/firestore"; 
 const firebaseConfig = {
-    apiKey: "AIzaSyAktS2Z1YW19zC6DzgaulzvJBC-lIKfdqo",
-    authDomain: "login-signup-form-d1674.firebaseapp.com",
-    databaseURL: "https://login-signup-form-d1674-default-rtdb.firebaseio.com",
-    projectId: "login-signup-form-d1674",
-    storageBucket: "login-signup-form-d1674.appspot.com",
-    messagingSenderId: "487043740599",
-    appId: "1:487043740599:web:770a92712a30b59c81ae32"
+  apiKey: "AIzaSyBQ4kGo7ysAnwrwptf7b3-NpZYWQm6jqSw",
+  authDomain: "epxo-react.firebaseapp.com",
+  databaseURL: "https://epxo-react-default-rtdb.firebaseio.com",
+  projectId: "epxo-react",
+  storageBucket: "epxo-react.appspot.com",
+  messagingSenderId: "905137103932",
+  appId: "1:905137103932:web:1fb5e322c70645e7fa4f39"
   };
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 
 export {
@@ -19,5 +21,7 @@ export {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut 
+    signOut ,
+    db,
+    doc, setDoc
 }

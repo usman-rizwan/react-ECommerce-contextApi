@@ -1,28 +1,38 @@
-import React, { useState ,useEffect } from "react";
+// App.js
+import React, { useState, useEffect } from "react";
 import AppRouter from "./config/Router";
 import User from "./context";
 import { auth, onAuthStateChanged } from "./db/index";
-
+import LoadSpin from "./components/LoadSpin";
 
 const App = () => {
-    const [login , setIsLogin] = useState(null)
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              const uid = user.uid;
-              setIsLogin(true)
-              // ...
-            } else {
-              // User is signed out
-              // ..
-              setIsLogin(false)
-            }
-          });
-    }, [])
-    
+  const [login, setIsLogin] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(user);
+        setIsLogin({ userStatus: true, user });
+      } else {
+        setIsLogin({ userStatus: false });
+      }
+
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+
+    return <LoadSpin />;
+  }
+
   return (
     <div>
-      <User.Provider value={{login , setIsLogin}}>
+      <User.Provider value={{ login, setIsLogin }}>
         <AppRouter />
       </User.Provider>
     </div>

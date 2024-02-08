@@ -1,8 +1,10 @@
 import { useEffect ,useContext, useState } from "react";
 import "../App.css";
-import { auth, createUserWithEmailAndPassword } from "../db/index";
+import { auth, createUserWithEmailAndPassword , db,
+  doc, setDoc } from "../db/index";
 import { message } from "antd";
 import SignupForm from "../components/SignupForm";
+import { Alert, Flex, Spin } from 'antd';
 
 const RegisterPage = () => {
   //   const { app, auth, setUser } = useFirebase();
@@ -28,21 +30,34 @@ const RegisterPage = () => {
   //   return a
   // }, []);
 
- 
-  let registerUser = ({ email, password }) => {
+const [loading,setLoading] = useState(false)
+
+  let registerUser = ({user_name ,email,phone_number,password}) => {
+    setLoading(true)
+    // console.log( user_name ,email,phone_number,password);
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async(userCredential) => {
         // Signed up
         const user = userCredential.user;
+        await setDoc(doc(db, "users", user.uid), {
+          name: user_name  ,
+         email:email,
+         password:password,
+         phone : phone_number,
+         
+        });
         message.success("User Register successfully");
         console.log(user);
+        setLoading(false)
         // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        message.error(errorMessage);
+        message.error(`Error Code:${errorCode}   ${errorMessage}`);
         console.log(errorMessage);
+        setLoading(false)
+
         // ..
       });
   };
@@ -50,7 +65,13 @@ const RegisterPage = () => {
   return (
   
     <>
-      <SignupForm registerUser={registerUser} />
+    {loading ?     <Spin tip="Loading..." className="mt-20" >
+      <Alert
+        message="Wait a moment"
+        description="Processing details ....."
+        type="info"
+      />
+    </Spin> : <SignupForm registerUser={registerUser} />}
       {/* <form onSubmit={handleSubmit}>
         <input type="email" placeholder="Email" />
         <input type="password" placeholder="Password" />

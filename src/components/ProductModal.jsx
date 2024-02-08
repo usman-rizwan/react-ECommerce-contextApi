@@ -41,6 +41,13 @@ export default function ProductModal({ id }) {
       
       .catch((err) => console.log(err));
   });
+  const addToCartHandler = (data)=>{
+    const cart = JSON.parse(localStorage.getItem("cart") ||"[]");
+    cart.push(data);
+    localStorage.setItem("cart",JSON.stringify(cart))
+
+console.log(data)
+  }
 
   // useEffect(() => {
   //   fetchData();
@@ -87,21 +94,22 @@ export default function ProductModal({ id }) {
         ),
       }}
     /></div>}
-                 {loading ?   <Spinner color="primary" className="mt-10"/> : `${productDetails.title}` }
+                 {loading ?   <Spinner color="primary" className="mt-10 "/> : <div className="capitalize">{productDetails.title}</div> }
               </ModalHeader>
-              <ModalBody>
-              {productDetails.description}
+              <ModalBody className="capitalize">
+              {productDetails.description}<br/>
               <div>
               {loading ? "" : <div >  <Chip color="warning" variant="dot" className="bg-[#27272a] text-white ">{productDetails.category}</Chip><br/><p className="mt-5">Price : <b> ${productDetails.price}/-</b></p> </div>   }
               </div>
               </ModalBody>
-              <ModalFooter>
+              <ModalFooter >
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
                 <Button
                   color="primary"
-                  onPress={() => console.log(productDetails)}
+                  onClick={() => addToCartHandler(productDetails)}
+                  // onPress={() => console.log(productDetails)}
                 >
                   Add To Cart
                 </Button>
