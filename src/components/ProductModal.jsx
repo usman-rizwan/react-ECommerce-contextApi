@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback  ,useContext} from "react";
 import {
   Modal,
   ModalContent,
@@ -15,12 +15,15 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
+import Cart from "../context/cart";
 import axios from "axios";
 import {Spinner , Chip} from "@nextui-org/react";
 import ImageLoading from '../assets/loading.gif'
-import { Image, Space } from 'antd';
+import { Image, Space ,notification } from 'antd';
+
 
 export default function ProductModal({ id }) {
+  const {cart , setCart} = useContext(Cart)
   const { isOpen, onOpen, onOpenChange ,onClose} = useDisclosure();
   const [backdrop, setBackdrop] = useState();
   const [productDetails, setProductDetails] = useState({});
@@ -35,20 +38,28 @@ export default function ProductModal({ id }) {
 
   const fetchData = useCallback(() => {
     axios(`https://fakestoreapi.com/products/${id}`)
-      .then((res) => {setProductDetails(res.data)
-      setloading(false)
+      .then((res) => {
+        setProductDetails(res.data);
+        setloading(false);
       })
-      
       .catch((err) => console.log(err));
-  });
-  const addToCartHandler = (data)=>{
-    const cart = JSON.parse(localStorage.getItem("cart") ||"[]");
-    cart.push(data);
-    localStorage.setItem("cart",JSON.stringify(cart))
-
-console.log(data)
-  }
-
+  }, []);  
+  
+  const addToCartHandler = (data) => {
+    console.log(data)
+    const storedCartData = localStorage.getItem("cart");
+    let cartData = storedCartData ? JSON.parse(storedCartData) : [];
+    cartData.push(data);
+    localStorage.setItem("cart", JSON.stringify(cartData));
+    setCart(cartData.length);
+    console.log("Cart Data:", cartData);
+    notification.success({
+      message: 'Item Added Successfully',
+      description: `${data.title}!`,
+      duration: 1.5,
+    });
+  };
+  
   // useEffect(() => {
   //   fetchData();
   // }, [fetchData]);
@@ -113,6 +124,7 @@ console.log(data)
                 >
                   Add To Cart
                 </Button>
+               
               </ModalFooter>
             </>
           )}
