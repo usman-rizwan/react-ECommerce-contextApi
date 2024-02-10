@@ -30,7 +30,7 @@ const App = () => {
     const storedCartData = localStorage.getItem("cart");
     const cartData = storedCartData ? JSON.parse(storedCartData) : [];
     setCart(cartData);
-  }, [cart]);
+  }, [setCart]);
 
   if (loading) {
     return <LoadSpin />;

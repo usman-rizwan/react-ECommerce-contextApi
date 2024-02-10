@@ -53,15 +53,10 @@ export default function ProductModal({ id }) {
   
     const storedCartData = localStorage.getItem("cart");
     let cartData = storedCartData ? JSON.parse(storedCartData) : [];
-  
-    // Check if the item already exists in the cart
     const existingItemIndex = cartData.findIndex(item => item.id === dataWithQty.id);
-  
     if (existingItemIndex !== -1) {
-      // If the item exists, increase the quantity
       cartData[existingItemIndex].qty += 1;
     } else {
-      // If the item does not exist, add it to the cart with quantity 1
       cartData.push(dataWithQty);
     }
   

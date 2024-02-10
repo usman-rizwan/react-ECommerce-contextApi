@@ -14,36 +14,41 @@ import {
   PlusOutlined,
   DeleteOutlined
 } from "@ant-design/icons";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 const CartDrawer = ({ open, setOpen }) => {
-  const [count, setCount] = useState();
   const [show, setShow] = useState(true);
-  const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-const delItem= (id)=>{
-  const index =  cartData.findIndex((item) => item.id === id);
-  if (index !== -1) {
-    cartData.splice(index, 1);
-    }
-    localStorage.setItem('cart',JSON.stringify(cartData));
-    setShow(!show);
-
+  const cartDataList = JSON.parse(localStorage.getItem("cart")) || [];
   
-}
-  const decline = () => {
-    let newCount = count - 1;
-    if (newCount < 1) {
-      newCount = 1;
-    }
-    setCount(newCount);
+  const [cartData, setCartData] = useState([]);
+
+  useEffect(() => {
+    const storedCartData = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartData(storedCartData);
+  }, []);
+
+  const delItem = (id) => {
+    const updatedCartData = cartData.filter((item) => item.id !== id);
+    setCartData(updatedCartData);
+    localStorage.setItem("cart", JSON.stringify(updatedCartData));
   };
-  return (
+
+  const updateItemQty = (action, id) => {
+    const updatedCartData = cartData.map((item) =>
+      item.id === id ? { ...item, qty: action === "add" ? item.qty + 1 : item.qty - 1 } : item
+    );
+
+    setCartData(updatedCartData);
+    localStorage.setItem("cart", JSON.stringify(updatedCartData));
+  };
+
+        
+        return (
     <>
       <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
-        {cartData.length == 0 ? (
+        {cartDataList.length == 0 ? (
           <EmptyCart />
         ) : (
-          cartData.map((value, i) => (
+          cartDataList.map((value, i) => (
             <Card className="max-w-[400px] mb-5" key={i}>
               <CardHeader className="flex gap-3">
                 <Image
@@ -70,11 +75,11 @@ const delItem= (id)=>{
                   <ButtonGroup>
                     <Button
                       className="mr-2"
-                      onClick={decline}
+                      onClick={()=>updateItemQty('minus',value.id)}
                       icon={<MinusOutlined />}/>
                     <Badge className="mr-2 mt-1" count={value.qty}></Badge>
                     <Button
-                      onClick={() => setCount(value.qty + 1)}
+                     onClick={()=>updateItemQty('add',value.id)}
                       icon={<PlusOutlined />}
                     />
                   </ButtonGroup>
