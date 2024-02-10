@@ -46,19 +46,38 @@ export default function ProductModal({ id }) {
   }, []);  
   
   const addToCartHandler = (data) => {
-    console.log(data)
+    console.log(data);
+  
+    // Add quantity field to the API data
+    const dataWithQty = { ...data, qty: 1 };
+  
     const storedCartData = localStorage.getItem("cart");
     let cartData = storedCartData ? JSON.parse(storedCartData) : [];
-    cartData.push(data);
+  
+    // Check if the item already exists in the cart
+    const existingItemIndex = cartData.findIndex(item => item.id === dataWithQty.id);
+  
+    if (existingItemIndex !== -1) {
+      // If the item exists, increase the quantity
+      cartData[existingItemIndex].qty += 1;
+    } else {
+      // If the item does not exist, add it to the cart with quantity 1
+      cartData.push(dataWithQty);
+    }
+  
     localStorage.setItem("cart", JSON.stringify(cartData));
-    setCart(cartData.length);
+    setCart(cartData);
     console.log("Cart Data:", cartData);
+  
     notification.success({
       message: 'Item Added Successfully',
-      description: `${data.title}!`,
-      duration: 1.5,
+      description: `${dataWithQty.title}!`,
+      duration: 1.5
     });
+  
+    onClose();
   };
+  
   
   // useEffect(() => {
   //   fetchData();

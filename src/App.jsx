@@ -9,7 +9,7 @@ import LoadSpin from "./components/LoadSpin";
 const App = () => {
   const [login, setIsLogin] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState(0);
+  const [cart, setCart] = useState([]);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -29,8 +29,8 @@ const App = () => {
   useEffect(() => {
     const storedCartData = localStorage.getItem("cart");
     const cartData = storedCartData ? JSON.parse(storedCartData) : [];
-    setCart(cartData.length);
-  }, [setCart]);
+    setCart(cartData);
+  }, [cart]);
 
   if (loading) {
     return <LoadSpin />;

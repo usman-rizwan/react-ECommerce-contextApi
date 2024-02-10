@@ -32,7 +32,7 @@ export default function AppNavbar({ status, logOut }) {
     "men's clothing",
     "women's clothing",
   ];
-
+console.log("cart" , cart)
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
@@ -63,18 +63,19 @@ export default function AppNavbar({ status, logOut }) {
 
     
         {/* Cart  */}
-      <NavbarContent justify="end">
-        <NavbarItem className="cursor-pointer">
+     { status.userStatus ? <NavbarContent justify="end">
+        <NavbarItem className="cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
+                  duration-300">
           {" "}
-          <Badge color="danger" content={cart} shape="circle">
+          <Badge color="danger" content={cart.length} shape="circle">
             <ShoppingCartOutlined
               style={{ fontSize: "30px" }}
              onClick={()=>setOpen(true)}
             />
-            <CartDrawer open={open} setOpen={setOpen} />
+             <CartDrawer open={open} setOpen={setOpen} />
           </Badge>
         </NavbarItem>
-      </NavbarContent>
+      </NavbarContent>: null}
 
 
 
