@@ -4,9 +4,10 @@ import User from '../context'
 import {auth, signOut } from "../db/index";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
-import LoadSpin from "../components/LoadSpin";
+
 import { message } from "antd";
 import {useSearchParams} from 'react-router-dom'
+import CardSpacer from "../components/CardSpacer";
 
 
 const Dashboard = () => {
@@ -68,7 +69,7 @@ const Dashboard = () => {
   return (
   <div>
     <AppNavbar  status={user.login}  logOut={logOut}/>
-    {loading ? <LoadSpin/> :
+    {loading ? <CardSpacer/> :
   <ProductCard list={products}  />
     }
   </div>

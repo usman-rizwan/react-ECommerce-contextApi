@@ -52,7 +52,6 @@ export default function ProductModal({ id }) {
   
     // Add quantity field to the API data
     const dataWithQty = { ...data, qty: 1 };
-  
     const storedCartData = localStorage.getItem("cart");
     let cartData = storedCartData ? JSON.parse(storedCartData) : [];
     const existingItemIndex = cartData.findIndex(item => item.id === dataWithQty.id);
@@ -74,11 +73,7 @@ export default function ProductModal({ id }) {
   
     onClose();
   };
-  
-  
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
+
 
   return (
     <>

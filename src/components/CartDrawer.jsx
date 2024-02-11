@@ -113,6 +113,15 @@ const CartDrawer = ({ open, setOpen }) => {
             </Card>
           ))
         )}
+          <div className="flex flex-col ">
+          <div className="flex-grow "> 
+            {cartDataList.length > 0 && (
+              <Button type="primary" className="bg-blue-500" block>
+                Check Out
+              </Button>
+            )}
+          </div>
+        </div>
       </Drawer>
     </>
   );
