@@ -1,4 +1,4 @@
-import React, { useState, useCallback  ,useContext} from "react";
+import React, { useState, useCallback  ,useContext, useEffect} from "react";
 import {
   Modal,
   ModalContent,
@@ -44,7 +44,9 @@ export default function ProductModal({ id }) {
       })
       .catch((err) => console.log(err));
   }, []);  
-  
+  useEffect(() => {
+    fetchData();
+  }, []);
   const addToCartHandler = (data) => {
     console.log(data);
   

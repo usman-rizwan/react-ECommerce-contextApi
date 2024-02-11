@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Drawer, Space } from "antd";
+import { Avatar, Badge, Button, Drawer, Space, message } from "antd";
 import {
   Card,
   CardHeader,
@@ -30,7 +30,10 @@ const CartDrawer = ({ open, setOpen }) => {
     const updatedCartData = cartData.filter((item) => item.id !== id);
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
+    message.success(<span>Item Removed Successfully!</span>);
   };
+
+  
   const updateItemQty = (action, id) => {
     let updatedCartData;
   
@@ -41,21 +44,21 @@ const CartDrawer = ({ open, setOpen }) => {
         index === existingItemIndex
           ? {
               ...item,
-              qty: action === "add" ? item.qty + 1 : Math.max(item.qty - 1, 1),
+              qty: action === "add" ? (item.rating.count > item.qty ? item.qty + 1 : message.error("Item limit exceed") && item.qty ) : Math.max(item.qty - 1, 1),
             }
           : item
       );
     } else {
-     
       const newItem = cartDataList.find((item) => item.id === id);
       updatedCartData = newItem
         ? [...cartData, { ...newItem, qty: 1 }]
-        : [...cartData]; 
+        : [...cartData];
     }
   
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
   };
+  
   
   
 
@@ -95,7 +98,11 @@ const CartDrawer = ({ open, setOpen }) => {
                       className="mr-2"
                       onClick={()=>updateItemQty('minus',value.id)}
                       icon={<MinusOutlined />}/>
-                    <Badge className="mr-2 mt-1" count={value.qty}></Badge>
+                   <Badge
+  className="mr-2 mt-1"
+  count={value.qty}
+  overflowCount={value.qty >= 100 ? value.qty : undefined}
+></Badge>
                     <Button onClick={() => updateItemQty('add', value.id)} icon={<PlusOutlined />} />
 
                   </ButtonGroup>
