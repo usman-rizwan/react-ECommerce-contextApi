@@ -9,16 +9,12 @@ import {
 } from "@nextui-org/react";
 import EmptyCart from "./EmptyCart";
 import ButtonGroup from "antd/es/button/button-group";
-import {
-  MinusOutlined,
-  PlusOutlined,
-  DeleteOutlined
-} from "@ant-design/icons";
+import { MinusOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 const CartDrawer = ({ open, setOpen }) => {
   const [show, setShow] = useState(true);
   const cartDataList = JSON.parse(localStorage.getItem("cart")) || [];
-  
+
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
@@ -34,15 +30,18 @@ const CartDrawer = ({ open, setOpen }) => {
 
   const updateItemQty = (action, id) => {
     const updatedCartData = cartData.map((item) =>
-      item.id === id ? { ...item, qty: action === "add" ? item.qty + 1 : item.qty - 1 } : item
+      item.id === id
+        ? {
+            ...item,
+            qty: action === "add" ? item.qty + 1 : Math.max(item.qty - 1, 1),
+          }
+        : item
     );
-
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
   };
 
-        
-        return (
+  return (
     <>
       <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
         {cartDataList.length == 0 ? (
@@ -61,7 +60,7 @@ const CartDrawer = ({ open, setOpen }) => {
                 <div className="flex flex-col">
                   <p className="text-md">{value.title}</p>
                   <p className="text-small text-default-500">
-                   Category:  {value.category}
+                    Category: {value.category}
                   </p>
                 </div>
               </CardHeader>
@@ -75,17 +74,23 @@ const CartDrawer = ({ open, setOpen }) => {
                   <ButtonGroup>
                     <Button
                       className="mr-2"
-                      onClick={()=>updateItemQty('minus',value.id)}
-                      icon={<MinusOutlined />}/>
+                      onClick={() => updateItemQty("minus", value.id)}
+                      icon={<MinusOutlined />}
+                    />
                     <Badge className="mr-2 mt-1" count={value.qty}></Badge>
                     <Button
-                     onClick={()=>updateItemQty('add',value.id)}
+                      onClick={() => updateItemQty("add", value.id)}
                       icon={<PlusOutlined />}
                     />
                   </ButtonGroup>
                 </Space>
-                <div><DeleteOutlined className="text-red-400 text-lg mt-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
-                  duration-300 cursor-pointer" onClick={()=>delItem(value.id)} /></div>
+                <div>
+                  <DeleteOutlined
+                    className="text-red-400 text-lg mt-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
+                  duration-300 cursor-pointer"
+                    onClick={() => delItem(value.id)}
+                  />
+                </div>
               </CardFooter>
             </Card>
           ))

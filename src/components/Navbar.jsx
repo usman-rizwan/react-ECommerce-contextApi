@@ -23,7 +23,7 @@ export default function AppNavbar({ status, logOut }) {
   const { cart } = useContext(Cart);
   const [open, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  let [setSearchParams] = useSearchParams();
+  let [searchParams,setSearchParams] = useSearchParams();
   // console.log(status)
   const navItems = [
     "all",
@@ -32,7 +32,6 @@ export default function AppNavbar({ status, logOut }) {
     "men's clothing",
     "women's clothing",
   ];
-console.log("cart" , cart)
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
