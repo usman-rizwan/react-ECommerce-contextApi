@@ -11,6 +11,7 @@ import EmptyCart from "./EmptyCart";
 import ButtonGroup from "antd/es/button/button-group";
 import { MinusOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 const CartDrawer = ({ open, setOpen }) => {
   const [show, setShow] = useState(true);
   const cartDataList = JSON.parse(localStorage.getItem("cart")) || [];
@@ -63,10 +64,10 @@ const CartDrawer = ({ open, setOpen }) => {
     <>
       <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
         {cartDataList.length == 0 ? (
-          <EmptyCart />
+          <EmptyCart description={"No items in cart yet ..."} />
         ) : (
           cartDataList.map((value, i) => (
-            <Card className="max-w-[400px] mb-5" key={i}>
+            <Card className="max-w-[400px] mb-5 poppins" key={i}>
               <CardHeader className="flex gap-3">
                 <Image
                   alt="nextui logo"
@@ -76,7 +77,7 @@ const CartDrawer = ({ open, setOpen }) => {
                   width={40}
                 />
                 <div className="flex flex-col">
-                  <p className="text-md">{value.title}</p>
+                  <p className="text-md font-semibold">{value.title}</p>
                   <p className="text-small text-default-500 capitalize">
                     Category: {value.category}
                   </p>
@@ -84,7 +85,7 @@ const CartDrawer = ({ open, setOpen }) => {
               </CardHeader>
               <Divider />
               <CardBody>
-                <p>{value.description}</p>
+                <p className="capitalize">{value.description}</p>
               </CardBody>
               <Divider />
               <CardFooter className="flex justify-between items-start">
@@ -123,8 +124,8 @@ const CartDrawer = ({ open, setOpen }) => {
         <div className="flex flex-col ">
           <div className="flex-grow ">
             {cartDataList.length > 0 && (
-              <Button type="primary" className="bg-blue-500" block>
-                Check Out
+              <Button type="primary" className="bg-blue-500 outfit" block>
+               <Link to={'/checkout'}>Check Out</Link> 
               </Button>
             )}
           </div>

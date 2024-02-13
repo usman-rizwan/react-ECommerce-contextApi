@@ -30,6 +30,8 @@ const LoginForm = ({ loginUser }) => {
             <Form.Item
               label="Email"
               name="email"
+              hasFeedback
+              validateDebounce={500}
               rules={[
                 {
                   required: true,
@@ -50,6 +52,8 @@ const LoginForm = ({ loginUser }) => {
             <Form.Item
               label="Password"
               name="password"
+              hasFeedback
+            validateDebounce={500}
               rules={[
                 {
                   required: true,

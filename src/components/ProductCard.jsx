@@ -5,7 +5,7 @@ import ProductModal from "./ProductModal";
 
 export default function ProductCard({list , viewDetails}) {
   return (
-    <div className="gap-2 grid grid-cols-2 sm:grid-cols-4 mt-5 mb-5 ">
+    <div className="gap-2 grid grid-cols-2 sm:grid-cols-4 mt-5 mb-5 poppins">
       {list.map((item, index) => (  
 <Card shadow="sm" key={index} isPressable onPress={() => console.log("item pressed")}>
   <CardBody className="overflow-visible p-0 ">

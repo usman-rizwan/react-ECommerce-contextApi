@@ -76,8 +76,8 @@ export default function ProductModal({ id }) {
 
 
   return (
-    <>
-      <div className="flex flex-wrap gap-3">
+    <div className="outfit">
+      <div className="flex flex-wrap gap-3 ">
         <Button
           key={"blur"}
           variant="flat"
@@ -116,9 +116,9 @@ export default function ProductModal({ id }) {
         ),
       }}
     /></div>}
-                 {loading ?   <Spinner color="primary" className="mt-10 "/> : <div className="capitalize">{productDetails.title}</div> }
+                 {loading ?   <Spinner color="primary" className="mt-10 "/> : <div className="capitalize outfit">{productDetails.title}</div> }
               </ModalHeader>
-              <ModalBody className="capitalize">
+              <ModalBody className="capitalize outfit">
               {productDetails.description}<br/>
               <div>
               {loading ? "" : <div >  <Chip color="warning" variant="dot" className="bg-[#27272a] text-white ">{productDetails.category}</Chip><br/><p className="mt-5">Price : <b> ${productDetails.price}/-</b></p> </div>   }
@@ -141,6 +141,6 @@ export default function ProductModal({ id }) {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }

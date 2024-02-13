@@ -14,7 +14,7 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined ,LogoutOutlined } from "@ant-design/icons";
 import { Badge } from "@nextui-org/react";
 import { Link as RLink, useSearchParams } from "react-router-dom";
 import Cart from "../context/cart";
@@ -33,7 +33,7 @@ export default function AppNavbar({ status, logOut }) {
     "women's clothing",
   ];
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen} className="poppins">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -109,7 +109,7 @@ export default function AppNavbar({ status, logOut }) {
                         color="danger"
                         onClick={logOut}
                       >
-                        Log Out
+                          <LogoutOutlined /> Log Out
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>

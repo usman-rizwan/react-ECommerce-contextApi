@@ -1,3 +1,11 @@
+@font-face {
+    font-family: Poppins-Regular;
+    src: url("../fonts/Poppins/Poppins-Regular.ttf");
+}
+@font-face {
+    font-family: Outfit-Regular;
+    src: url("../fonts/Outfit/static/Outfit-Regular.ttf");
+}
 .d-flex {
     display: flex;
     justify-content: center !important;
@@ -18,4 +26,10 @@
 .text-center{
     text-align: center ;
     margin-top: 150px;
+}
+.poppins{
+    font-family: Poppins-Regular;
+}
+.outfit{
+    font-family: Outfit-Regular;
 }
