@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Image, List, } from 'antd';
-import { Button } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import  {CheckCircleOutlined} from '@ant-design/icons';
 import FormModal from './FormModal';
 const CartData = () => {
@@ -33,13 +33,13 @@ const CartData = () => {
           <List.Item className='poppins'>
             <List.Item.Meta
               avatar={<Image src={item.image} style={{ width: '110px', height: '100px' }} />}
-              title={<span className='capitalize font-medium'>{item.title}</span>}
+              title={<div className='flex justify-between'><span className='capitalize font-medium'>{item.title}</span><span><Chip color="warning" variant="dot" className="bg-[#27272a] text-white capitalize ">{item.category}</Chip></span></div>}
               description={<span className='capitalize'>{item.description}</span>}
             />
             <div className='flex justify-between'>
               <span className='font-bold'>Price: ${item.price}</span>
               <span className='font-bold'> Quantity: {item.qty}</span>
-              <span className='font-bold'>Total Price: ${item.price * item.qty}</span>
+              <span className='font-bold'>Total Price: ${Math.round(item.price * item.qty)}</span>
             </div>
           </List.Item>
         )}
