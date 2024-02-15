@@ -32,10 +32,9 @@ const CartDrawer = ({ open, setOpen }) => {
 
   const updateItemQty = (action, id) => {
     let updatedCartData;
-
     const existingItemIndex = cartData.findIndex((item) => item.id === id);
 
-    if (existingItemIndex !== -1) {
+    if (existingItemIndex !== -1) {      
       updatedCartData = cartData.map((item, index) =>
         index === existingItemIndex
           ? {
@@ -51,6 +50,7 @@ const CartDrawer = ({ open, setOpen }) => {
       );
     } else {
       const newItem = cartDataList.find((item) => item.id === id);
+      console.log("else newItme" , newItem)
       updatedCartData = newItem
         ? [...cartData, { ...newItem, qty: 1 }]
         : [...cartData];
@@ -64,7 +64,7 @@ const CartDrawer = ({ open, setOpen }) => {
     <>
       <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
         {cartDataList.length == 0 ? (
-          <EmptyCart description={"No items in cart yet ..."} />
+          <EmptyCart description={"No items in cart yet ..."} show={"none"} />
         ) : (
           cartDataList.map((value, i) => (
             <Card className="max-w-[400px] mb-5 poppins" key={i}>
