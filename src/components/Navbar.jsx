@@ -49,7 +49,7 @@ export default function AppNavbar({ status, logOut }) {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {navItems.map((v, i) => (
-          <NavbarItem
+            <NavbarItem
             className="capitalize cursor-pointer text-lg transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none hover:underline hover:text-blue-600 hover:font-bold"
             key={i}
             onClick={() => setSearchParams({ categories: v })}

@@ -20,12 +20,22 @@ const CheckOut = ({logOut}) => {
           </p>
         </NavbarBrand>      
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-       <span className='font-mono font-semibold'>Check Out</span>
+      <NavbarContent className=" sm:flex gap-4" justify="center">
+       
+            <NavbarItem
+            className="capitalize cursor-pointer text-lg transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none hover:underline hover:text-blue-600 hover:font-bold font-semibold"
+          >
+           
+           My Order
+          </NavbarItem>
+       
       </NavbarContent>
+      {/* <NavbarContent className="hidden sm:flex gap-4" justify="center">
+       <span className=' font-semibold'>Check Out</span>
+      </NavbarContent> */}
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-      
+   
         </NavbarItem>
         <NavbarItem>
         <Dropdown placement="bottom-end">
