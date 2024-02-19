@@ -8,13 +8,10 @@ import User from "../context";
 import CheckOutPage from "../pages/CheckOutPage";
 import EmptyCart from "../components/EmptyCart";
 import PageNotFound from "../components/PageNotFound";
+import OrderDetails from "../pages/OrderDetails";
 
 const AppRouter = () => {
   const { login } = useContext(User);
-  const [cartData, setCartData] = useState([]);
-  useEffect(() => {
-    setCartData(JSON.parse(localStorage.getItem("cart")) || []);
-  }, []);
 
   return (
     <BrowserRouter>
@@ -29,14 +26,27 @@ const AppRouter = () => {
           element={login.userStatus ? <Navigate to="/" /> : <RegisterPage />}
         />
         <Route
+          path="/orderstatus"
+          element={
+            login.userStatus  ? (
+              <OrderDetails />
+            ) : (
+              <EmptyCart
+                class_name={"mt-20"}
+                description={"No orders to delivered :("}
+              />
+            )
+          }
+       />
+        <Route
           path="/checkout"
           element={
-            login.userStatus && cartData && cartData.length > 0 ? (
+            login.userStatus  ? (
               <CheckOutPage />
             ) : (
               <EmptyCart
                 class_name={"mt-20"}
-                description={"Page not exist..."}
+                description={"No items for checkout..."}
               />
             )
           }

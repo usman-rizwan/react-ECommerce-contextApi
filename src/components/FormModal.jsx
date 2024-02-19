@@ -12,13 +12,15 @@ import { useNavigate } from "react-router-dom";
 import CheckOutForm from "./CheckOutForm";
 import { message } from "antd";
 import Cart from "../context/cart.js";
+import User from "../context/index.js";
 
 const FormModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [backdrop, setBackdrop] = useState();
   const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
-  const {setCart}= useContext(Cart)
+  const { setCart } = useContext(Cart);
+  const { login } = useContext(User);
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("cart")) || [];
     if (storedData) {
@@ -62,31 +64,36 @@ const FormModal = () => {
       address,
       totalItems: cartData.length,
       totalAmount: calculateTotalPrice(),
-      items:cartData,
+      items: cartData,
+      userUid: login?.user?.uid,
       status: "pending",
       timestamp: serverTimestamp(),
     };
     const docRef = await addDoc(collection(db, "orders"), orderDetails);
-    console.log("Document written with ID: ", docRef.id); 
+    console.log("Document written with ID: ", docRef.id);
     message.success("Your Order has been placed successfully!");
     setCartData([]);
     localStorage.clear();
-    setCart(0)
-    navigate("/");
+    setCart(0);
     console.log(orderDetails);
   };
 
   return (
     <>
-      <Button
-        key={"blur"}
-        variant="flat"
-        backdrop={backdrop}
-        color="primary"
-        onPress={() => handleOpen("blur")}
-      >
-        Order Now
-      </Button>
+      {cartData && cartData.length > 0 ? (
+        <Button
+          key={"blur"}
+          variant="flat"
+          backdrop={backdrop}
+          color="primary"
+          onPress={() => handleOpen("blur")}
+        >
+          Order Now
+        </Button>
+      ) : (
+        ""
+      )}
+
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
