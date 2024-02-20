@@ -14,16 +14,17 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { ShoppingCartOutlined ,LogoutOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Badge } from "@nextui-org/react";
 import { Link as RLink, useSearchParams } from "react-router-dom";
 import Cart from "../context/cart";
 import CartDrawer from "./CartDrawer";
+import { CarryOutOutlined } from "@ant-design/icons";
 export default function AppNavbar({ status, logOut }) {
   const { cart } = useContext(Cart);
   const [open, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  let [searchParams,setSearchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
   // console.log(status)
   const navItems = [
     "all",
@@ -49,7 +50,7 @@ export default function AppNavbar({ status, logOut }) {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {navItems.map((v, i) => (
-            <NavbarItem
+          <NavbarItem
             className="capitalize cursor-pointer text-lg transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none hover:underline hover:text-blue-600 hover:font-bold"
             key={i}
             onClick={() => setSearchParams({ categories: v })}
@@ -60,23 +61,24 @@ export default function AppNavbar({ status, logOut }) {
         ))}
       </NavbarContent>
 
-    
-        {/* Cart  */}
-     { status.userStatus ? <NavbarContent justify="end">
-        <NavbarItem className="cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
-                  duration-300">
-          {" "}
-          <Badge color="danger" content={cart.length} shape="circle">
-            <ShoppingCartOutlined
-              style={{ fontSize: "30px" }}
-             onClick={()=>setOpen(true)}
-            />
-             <CartDrawer open={open} setOpen={setOpen} />
-          </Badge>
-        </NavbarItem>
-      </NavbarContent>: null}
-
-
+      {/* Cart  */}
+      {status.userStatus ? (
+        <NavbarContent justify="end">
+          <NavbarItem
+            className="cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
+                  duration-300"
+          >
+            {" "}
+            <Badge color="danger" content={cart.length} shape="circle">
+              <ShoppingCartOutlined
+                style={{ fontSize: "30px" }}
+                onClick={() => setOpen(true)}
+              />
+              <CartDrawer open={open} setOpen={setOpen} />
+            </Badge>
+          </NavbarItem>
+        </NavbarContent>
+      ) : null}
 
       {/* User Status */}
       <NavbarContent justify="end">
@@ -103,13 +105,17 @@ export default function AppNavbar({ status, logOut }) {
                         <p className="font-semibold">Signed in as</p>
                         <p className="font-semibold">{status.user.email}</p>
                       </DropdownItem>
+                      <DropdownItem key="My orders" className="h-14 gap-2" color="primary">
+                       <RLink to={'/orderstatus'}> <CarryOutOutlined /> My Orders
+                       </RLink>
+                      </DropdownItem>
 
                       <DropdownItem
                         key="logout"
                         color="danger"
                         onClick={logOut}
                       >
-                          <LogoutOutlined /> Log Out
+                        <LogoutOutlined /> Log Out
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>

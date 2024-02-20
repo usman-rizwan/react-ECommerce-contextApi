@@ -12,7 +12,8 @@ import {
   getFirestore,
   addDoc,
   serverTimestamp,
-  collection
+  collection,
+  query, where, onSnapshot 
 } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyBQ4kGo7ysAnwrwptf7b3-NpZYWQm6jqSw",
@@ -39,5 +40,5 @@ export {
   setDoc,
   addDoc,
   serverTimestamp,
-  collection
+  collection,query, where, onSnapshot 
 };
