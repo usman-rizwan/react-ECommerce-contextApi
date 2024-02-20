@@ -1,9 +1,18 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table ,Modal } from "antd";
+import { Button, Input, Space, Table } from "antd";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Button as NextButton
+} from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
 import { collection, query, where, onSnapshot, db } from "../db/index";
-import {EyeOutlined}  from "@ant-design/icons"
+import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
 
 const OrderData = () => {
@@ -11,10 +20,11 @@ const OrderData = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [userData, setUserData] = useState([]);
-  const searchInput = useRef(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedItems, setSelectedItems] = useState([]);
-  const [visible, setVisible] = useState(false);
-  
+  const [modalTableData, setModalTableData] = useState([]); 
+  const searchInput = useRef(null);
+  const [scrollBehavior, setScrollBehavior] = React.useState("inside");
   useEffect(() => {
     getUserOrder();
   }, []);
@@ -42,12 +52,16 @@ const OrderData = () => {
   };
   const showItemsModal = (items) => {
     setSelectedItems(items);
-    setVisible(true);
+    
+    const tableData = items.map((item, index) => ({
+      key: index,
+      name: item.title,
+      quantity: item.qty,
+    }));
+    setModalTableData(tableData);
+    onOpen();
   };
 
-  const handleItemsModalCancel = () => {
-    setVisible(false);
-  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -138,22 +152,22 @@ const OrderData = () => {
       }
     },
     render: (text, record) =>
-    searchedColumn === dataIndex ? (
-      <Highlighter
-        highlightStyle={{
-          backgroundColor: "#ffc069",
-          padding: 0,
-        }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    ) : (
-      text
-    ),
-});
-  
-const columns = [
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const columns = [
     {
       title: "Name",
       dataIndex: "name",
@@ -187,33 +201,38 @@ const columns = [
   ];
   return (
     <>
-    <Table
-      columns={columns}
-      dataSource={userData}
-      className="mt-5 container mx-auto"
-    />
-    <Modal
-      title="Order Items"
-      visible={visible}
-      onCancel={handleItemsModalCancel}
-      footer={null}
-      style={{ maxHeight: '80vh', overflowY: 'auto' }}
-    >
-      <ul>
-        {selectedItems.map((item, index) => (
-          <li className="capitalize" key={index}>
-            <h1>Item{index + 1}</h1>
-            {item.category}
-          <br/>
-          Description: {item.description}
-          <br/>
-           - Quantity: {item.qty}
-           <hr/>
-           </li>
-        ))}
-      </ul>
-    </Modal>
-  </>
+      <Table
+        columns={columns}
+        dataSource={userData}
+        className="mt-5 container mx-auto"
+      />
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Items Details</ModalHeader>
+              <ModalBody>
+              <ModalBody>
+              <Table
+                columns={[
+                  { title: "Name", dataIndex: "name", key: "name" },
+                  { title: "Quantity", dataIndex: "quantity", key: "quantity" },
+                  // Add more columns as needed
+                ]}
+                dataSource={modalTableData}
+              />
+            </ModalBody>
+              </ModalBody>
+              <ModalFooter>
+                <NextButton color="danger" variant="light" onPress={onClose}>
+                  Close
+                </NextButton>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
