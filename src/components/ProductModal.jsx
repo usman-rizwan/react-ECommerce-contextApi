@@ -27,7 +27,9 @@ export default function ProductModal({ id }) {
   const { isOpen, onOpen, onOpenChange ,onClose} = useDisclosure();
   const [backdrop, setBackdrop] = useState();
   const [productDetails, setProductDetails] = useState({});
-  const [loading, setloading] = useState(true)
+  const [loading, setloading] = useState(true);
+  const [scrollBehavior, setScrollBehavior] = useState("inside");
+
 
  
 
@@ -89,8 +91,8 @@ export default function ProductModal({ id }) {
           View Details
         </Button>
       </div>
-      <Modal backdrop={backdrop} isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} isDismissable={false}>
-        <ModalContent>
+      <Modal backdrop={backdrop} isOpen={isOpen} onClose={onClose} onOpenChange={onOpenChange} isDismissable={false} scrollBehavior={scrollBehavior}>
+        <ModalContent className="md:h-[60vh]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">

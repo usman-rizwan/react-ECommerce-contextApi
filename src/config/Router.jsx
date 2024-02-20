@@ -9,6 +9,7 @@ import CheckOutPage from "../pages/CheckOutPage";
 import EmptyCart from "../components/EmptyCart";
 import PageNotFound from "../components/PageNotFound";
 import OrderDetails from "../pages/OrderDetails";
+import AdminPage from "../pages/AdminPage";
 
 const AppRouter = () => {
   const { login } = useContext(User);
@@ -16,7 +17,20 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            login.userStatus ? (
+              login.user.email === "admin@gmail.com" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <Dashboard />
+              )
+            ) : (
+              <Dashboard />
+            )
+          }
+        />
         <Route
           path="/login"
           element={login.userStatus ? <Navigate to="/" /> : <LoginPage />}
@@ -26,28 +40,46 @@ const AppRouter = () => {
           element={login.userStatus ? <Navigate to="/" /> : <RegisterPage />}
         />
         <Route
-          path="/orderstatus"
+          path="/admin"
           element={
-            login.userStatus  ? (
-              <OrderDetails />
+            login.userStatus && login.user.email == "admin@gmail.com" ? (
+              <AdminPage />
             ) : (
-              <EmptyCart
-                class_name={"mt-20"}
-                description={"No orders to delivered :("}
-              />
+              <PageNotFound />
             )
           }
-       />
+        />
+          <Route
+          path="/orderstatus"
+          element={
+            login.userStatus ? (
+              login.user.email === "admin@gmail.com" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <OrderDetails />
+              )
+            ) : (
+              <EmptyCart
+              class_name={"mt-20"}
+              description={"No orders to delivered :("}
+            />
+            )
+          }
+        />
         <Route
           path="/checkout"
           element={
-            login.userStatus  ? (
-              <CheckOutPage />
+            login.userStatus ? (
+              login.user.email === "admin@gmail.com" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <CheckOutPage />
+              )
             ) : (
               <EmptyCart
-                class_name={"mt-20"}
-                description={"No items for checkout..."}
-              />
+              class_name={"mt-20"}
+              description={"No orders to delivered :("}
+            />
             )
           }
         >
@@ -55,10 +87,7 @@ const AppRouter = () => {
             element={() => <h1 className="text-center text-4xl">Not Found</h1>}
           />
         </Route>
-          <Route
-          path="*"
-          element={<PageNotFound />}
-        />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

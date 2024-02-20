@@ -59,7 +59,8 @@ const OrderNavbar = ({ logOut , name,path,pageName }) => {
                       <RollbackOutlined /> Back Home
                     </Link>
                   </p>
-                </DropdownItem>
+                </DropdownItem> 
+                { pageName &&
                 <DropdownItem key="Order" className="h-10 gap-2" color="secondary">
                   <p >
                     <Link to={`/${path}`}>
@@ -67,6 +68,7 @@ const OrderNavbar = ({ logOut , name,path,pageName }) => {
                     </Link>
                   </p>
                 </DropdownItem>
+                }
                 <DropdownItem key="logout" color="danger" onClick={logOut}>
                   <LogoutOutlined /> Log Out
                 </DropdownItem>

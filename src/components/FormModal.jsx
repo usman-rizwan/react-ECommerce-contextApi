@@ -75,6 +75,7 @@ const FormModal = () => {
     setCartData([]);
     localStorage.clear();
     setCart(0);
+    navigate('/orderstatus')
     console.log(orderDetails);
   };
 

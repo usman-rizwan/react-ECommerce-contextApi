@@ -57,6 +57,8 @@ const OrderData = () => {
       key: index,
       name: item.title,
       quantity: item.qty,
+      image: item.image,
+      price: Math.round(item.price)
     }));
     setModalTableData(tableData);
     onOpen();
@@ -172,14 +174,12 @@ const OrderData = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: "30%",
       ...getColumnSearchProps("name"),
     },
     {
       title: "Items",
       dataIndex: "items",
       key: "items",
-      width: "30%",
       render: (items) => (
         <Button
           type="link"
@@ -189,6 +189,16 @@ const OrderData = () => {
           View Items
         </Button>
       ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "address",
+    },
+    {
+      title: " Amount",
+      dataIndex: "totalAmount",
+      key: "amount",
     },
     {
       title: "Address",
@@ -204,10 +214,10 @@ const OrderData = () => {
       <Table
         columns={columns}
         dataSource={userData}
-        className="mt-5 container mx-auto"
+        className="mt-5 container mx-auto capitalize"
       />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
-        <ModalContent>
+      <ModalContent style={{height:"50vh"}}>
           {(onClose) => (
             <>
               <ModalHeader>Items Details</ModalHeader>
@@ -215,9 +225,21 @@ const OrderData = () => {
               <ModalBody>
               <Table
                 columns={[
-                  { title: "Name", dataIndex: "name", key: "name" },
+                  {
+                    title: "Image",
+                    dataIndex: "image",
+                    key: "image",
+                    render: (image) => (
+                      <img
+                        src={image}
+                        alt="Item"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    ),
+                  },
+                  { title: "Name", dataIndex: "name", key: "name", },
                   { title: "Quantity", dataIndex: "quantity", key: "quantity" },
-                  // Add more columns as needed
+                  { title: "Price", dataIndex: "price", key: "price" },
                 ]}
                 dataSource={modalTableData}
               />
