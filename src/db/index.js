@@ -17,6 +17,7 @@ import {
   where,
   onSnapshot,
   getDocs,
+  updateDoc
 } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyBQ4kGo7ysAnwrwptf7b3-NpZYWQm6jqSw",
@@ -48,4 +49,5 @@ export {
   where,
   onSnapshot,
   getDocs,
+  updateDoc
 };

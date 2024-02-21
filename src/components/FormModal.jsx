@@ -7,7 +7,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { addDoc, db, serverTimestamp, collection } from "../db/index.js";
+import { addDoc, db, serverTimestamp, collection,updateDoc } from "../db/index.js";
 import { useNavigate } from "react-router-dom";
 import CheckOutForm from "./CheckOutForm";
 import { message } from "antd";
@@ -70,6 +70,9 @@ const FormModal = () => {
       timestamp: serverTimestamp(),
     };
     const docRef = await addDoc(collection(db, "orders"), orderDetails);
+    await updateDoc(docRef, {
+      orderId: docRef.id
+    });
     console.log("Document written with ID: ", docRef.id);
     message.success("Your Order has been placed successfully!");
     setCartData([]);

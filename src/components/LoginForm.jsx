@@ -82,7 +82,7 @@ const LoginForm = ({ loginUser }) => {
                 htmlType="submit"
                 className="login-form-button bg-blue-500"
               >
-                Log in
+                Log In
               </Button>
               <div className="flex justify-center mt-5">
                 Or{" "}
