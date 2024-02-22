@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Select } from "antd";
+import { Button, Input, Space, Table, Select, message } from "antd";
 import {
   Modal,
   ModalContent,
@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
 import { collection, onSnapshot, db, doc, updateDoc } from "../db/index";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 import User from "../context";
 
 const AdminData = () => {
@@ -26,6 +26,7 @@ const AdminData = () => {
   const searchInput = useRef(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrderState, setSelectedOrderState] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [scrollBehavior, setScrollBehavior] = React.useState("inside");
   useEffect(() => {
     getUserOrder();
@@ -69,6 +70,7 @@ const AdminData = () => {
   };
   const updateOrderState = async () => {
     if (selectedOrderState !== null && selectedOrderId) {
+      setLoading(true);
       const docRef = doc(db, "orders", `${selectedOrderId}`);
 
       await updateDoc(docRef, {
@@ -82,12 +84,16 @@ const AdminData = () => {
       console.log(
         `Order id  ${selectedOrderId} state updated to ${selectedOrderState}`
       );
+      message.success(`Order Status Updated Successfully`);
       setSelectedOrderState(null);
       setSelectedOrderId(null);
+      setLoading(false);
     } else {
+      message.error("Please select an order and a new status.");
       console.error(
         `Selected order ID ${selectedOrderId} or state ${selectedOrderState} is missing`
       );
+      setLoading(false);
     }
   };
 
@@ -161,7 +167,7 @@ const AdminData = () => {
             }}
             className="text-red-600 hover:text-red-600"
           >
-            close
+            Close
           </Button>
         </Space>
       </div>
@@ -253,24 +259,24 @@ const AdminData = () => {
             <Select
               defaultValue="Accept/Reject"
               style={{ width: 120 }}
-              onChange={(value) =>{
-                 setSelectedOrderState(value)
-                 setSelectedOrderId(record.key);
-                }
-                }
+              onChange={(value) => {
+                setSelectedOrderState(value);
+                setSelectedOrderId(record.key);
+              }}
             >
               <Select.Option value="accepted">Accepted</Select.Option>
               <Select.Option value="rejected">Rejected</Select.Option>
               <Select.Option value="pending">Pending</Select.Option>
             </Select>
-            <Button
-              className="ml-3 hover:bg-blue-100 mt-3 font-semibold border-3 border-gray-300"
+            <NextButton
+              disabled={loading}
+              className="ml-3 bg-white border-3 hover:bg-blue-200 hover:text-blue-500"
               onClick={() => {
-                 updateOrderState();
+                updateOrderState();
               }}
             >
               Save
-            </Button>
+            </NextButton>
           </>
         );
       },

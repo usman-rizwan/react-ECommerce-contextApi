@@ -1,9 +1,10 @@
 import React from 'react'
+import OrderNavbar from '../components/OrderNavbar'
 
 const Chat = () => {
   return (
     <div>
-      <h1>Chat</h1>
+    <OrderNavbar name={"Chat"}   />
     </div>
   )
 }

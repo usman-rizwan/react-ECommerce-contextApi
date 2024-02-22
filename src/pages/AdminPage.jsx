@@ -21,7 +21,7 @@ const AdminPage = () => {
       };
   return (
     <div>
-        <OrderNavbar logOut={logOut} name={'Admin Page'} />
+        <OrderNavbar logOut={logOut} name={'Admin Page'} path={'chat'} pageName={"Chat"}  />
         <AdminData />
     </div>
   )
