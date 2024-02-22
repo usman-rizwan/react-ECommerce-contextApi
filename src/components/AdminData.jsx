@@ -11,7 +11,7 @@ import {
   Button as NextButton,
 } from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
-import { collection, onSnapshot, db,doc,updateDoc } from "../db/index";
+import { collection, onSnapshot, db, doc, updateDoc } from "../db/index";
 import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
 
@@ -68,20 +68,26 @@ const AdminData = () => {
     onOpen();
   };
   const updateOrderState = async () => {
-    if (selectedOrderState !== null  &&selectedOrderId ) {
+    if (selectedOrderState !== null && selectedOrderId) {
       const docRef = doc(db, "orders", `${selectedOrderId}`);
 
       await updateDoc(docRef, {
         status: selectedOrderState,
       });
-      console.log(selectedOrderId,selectedOrderState ,"selectedItems,selectedOrderId");
+      console.log(
+        selectedOrderId,
+        selectedOrderState,
+        "selectedItems,selectedOrderId"
+      );
       console.log(
         `Order id  ${selectedOrderId} state updated to ${selectedOrderState}`
-        );
-        setSelectedOrderState(null);
-        setSelectedOrderId(null);
+      );
+      setSelectedOrderState(null);
+      setSelectedOrderId(null);
     } else {
-      console.error(`Selected order ID ${selectedOrderId} or state ${selectedOrderState} is missing`);
+      console.error(
+        `Selected order ID ${selectedOrderId} or state ${selectedOrderState} is missing`
+      );
     }
   };
 
@@ -196,6 +202,7 @@ const AdminData = () => {
       dataIndex: "orderId",
       key: "orderId",
       ...getColumnSearchProps("orderId"),
+      width: 100,
     },
     {
       title: "Name",
@@ -216,11 +223,13 @@ const AdminData = () => {
           View Items
         </Button>
       ),
+      width: 100,
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      ...getColumnSearchProps("status"),
     },
     {
       title: " Amount",
@@ -244,16 +253,19 @@ const AdminData = () => {
             <Select
               defaultValue="Accept/Reject"
               style={{ width: 120 }}
-              onChange={(value) => setSelectedOrderState(value)}
+              onChange={(value) =>{
+                 setSelectedOrderState(value)
+                 setSelectedOrderId(record.key);
+                }
+                }
             >
               <Select.Option value="accepted">Accepted</Select.Option>
               <Select.Option value="rejected">Rejected</Select.Option>
               <Select.Option value="pending">Pending</Select.Option>
             </Select>
             <Button
-              className="ml-3 hover:bg-blue-100 "
+              className="ml-3 hover:bg-blue-100 mt-3 font-semibold border-3 border-gray-300"
               onClick={() => {
-               setSelectedOrderId(record.key);
                  updateOrderState();
               }}
             >
@@ -270,6 +282,9 @@ const AdminData = () => {
         columns={columns}
         dataSource={userData}
         className="mt-5 container mx-auto capitalize"
+        pagination={{ pageSize: 5 }}
+        scroll={{ x: true }}
+        size="small"
       />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
         <ModalContent style={{ height: "50vh" }}>

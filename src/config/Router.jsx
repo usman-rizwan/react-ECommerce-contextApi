@@ -10,6 +10,7 @@ import EmptyCart from "../components/EmptyCart";
 import PageNotFound from "../components/PageNotFound";
 import OrderDetails from "../pages/OrderDetails";
 import AdminPage from "../pages/AdminPage";
+import Chat from "../pages/Chat";
 
 const AppRouter = () => {
   const { login } = useContext(User);
@@ -38,6 +39,10 @@ const AppRouter = () => {
         <Route
           path="/signup"
           element={login.userStatus ? <Navigate to="/" /> : <RegisterPage />}
+        />
+        <Route
+          path="/chat"
+          element={login.userStatus ? <Chat/> : <LoginPage />}
         />
         <Route
           path="/admin"
