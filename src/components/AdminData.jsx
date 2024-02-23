@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Select, message } from "antd";
+import { Button, Input, Space, Table, Select } from "antd";
 import {
   Modal,
   ModalContent,
@@ -12,8 +12,9 @@ import {
 } from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
 import { collection, onSnapshot, db, doc, updateDoc } from "../db/index";
-import { EyeOutlined, LoadingOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
+import {toast } from "sonner";
 
 const AdminData = () => {
   const { login } = useContext(User);
@@ -76,6 +77,7 @@ const AdminData = () => {
       await updateDoc(docRef, {
         status: selectedOrderState,
       });
+      toast.success("Order status updated successfully");
       console.log(
         selectedOrderId,
         selectedOrderState,
@@ -84,12 +86,12 @@ const AdminData = () => {
       console.log(
         `Order id  ${selectedOrderId} state updated to ${selectedOrderState}`
       );
-      message.success(`Order Status Updated Successfully`);
       setSelectedOrderState(null);
       setSelectedOrderId(null);
       setLoading(false);
     } else {
-      message.error("Please select an order and a new status.");
+      // message.error("Please select an order and a new status.");
+      toast.error("Please select an order and a new status.");
       console.error(
         `Selected order ID ${selectedOrderId} or state ${selectedOrderState} is missing`
       );

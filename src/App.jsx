@@ -5,6 +5,7 @@ import User from "./context";
 import Cart from "./context/cart";
 import { auth, onAuthStateChanged } from "./db/index";
 import LoadSpin from "./components/LoadSpin";
+import { Toaster } from "sonner";
 
 const App = () => {
   const [login, setIsLogin] = useState(null);
@@ -41,6 +42,7 @@ const App = () => {
       <User.Provider value={{ login, setIsLogin }}>
         <Cart.Provider value={{cart, setCart}}>
           <AppRouter />
+          <Toaster  position="top-right" richColors  />
         </Cart.Provider>
       </User.Provider>
     </div>

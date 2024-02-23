@@ -10,9 +10,9 @@ import {
 import { addDoc, db, serverTimestamp, collection,updateDoc } from "../db/index.js";
 import { useNavigate } from "react-router-dom";
 import CheckOutForm from "./CheckOutForm";
-import { message } from "antd";
 import Cart from "../context/cart.js";
 import User from "../context/index.js";
+import { toast } from "sonner";
 
 const FormModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -74,7 +74,7 @@ const FormModal = () => {
       orderId: docRef.id
     });
     console.log("Document written with ID: ", docRef.id);
-    message.success("Your Order has been placed successfully!");
+    toast.success("Your Order has been placed successfully!");
     setCartData([]);
     localStorage.clear();
     setCart(0);

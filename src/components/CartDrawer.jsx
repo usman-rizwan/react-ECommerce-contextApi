@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Drawer, Space, message } from "antd";
+import { Avatar, Badge, Button, Drawer, Space } from "antd";
 import {
   Card,
   CardHeader,
@@ -12,6 +12,7 @@ import ButtonGroup from "antd/es/button/button-group";
 import { MinusOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 const CartDrawer = ({ open, setOpen }) => {
   const [show, setShow] = useState(true);
   const cartDataList = JSON.parse(localStorage.getItem("cart")) || [];
@@ -27,7 +28,7 @@ const CartDrawer = ({ open, setOpen }) => {
     const updatedCartData = cartData.filter((item) => item.id !== id);
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
-    message.success(<span>Item Removed Successfully!</span>);
+    toast.success(<span>Item Removed Successfully!</span>);
   };
 
   const updateItemQty = (action, id) => {
