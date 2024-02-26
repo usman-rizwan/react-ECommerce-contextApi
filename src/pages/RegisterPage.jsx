@@ -44,8 +44,9 @@ const [loading,setLoading] = useState(false)
          email:email,
          password:password,
          phone : phone_number,
-         
+         uid: user.uid,
         });
+
         message.success("User Register successfully");
         console.log(user);
         setLoading(false)

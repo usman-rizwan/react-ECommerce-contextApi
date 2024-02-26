@@ -272,7 +272,7 @@ const AdminData = () => {
             </Select>
             <NextButton
               disabled={loading}
-              className="ml-3 bg-white border-3 hover:bg-blue-200 hover:text-blue-500"
+              className="lg:ml-3 sm:ml-0 mt-1 lg:w-24 md:w-28 sm:w-32  bg-white border-3 hover:bg-blue-200 hover:text-blue-500"
               onClick={() => {
                 updateOrderState();
               }}
