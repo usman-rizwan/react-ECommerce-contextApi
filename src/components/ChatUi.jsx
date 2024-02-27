@@ -14,11 +14,23 @@ import {
   TypingIndicator,
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
-import { db, collection, query, where, getDocs } from "../db/index";
-import { Input } from "antd";
+import {
+  db,
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  orderBy,
+  onSnapshot 
+} from "../db/index";
+import { Input, message } from "antd";
 import User from "../context";
+import EmptyCart from "./EmptyCart";
 const ChatComponent = () => {
   const { login } = useContext(User);
+  const curentUserId = login.user.uid;
   const [sidebarStyle, setSidebarStyle] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [messageInputValue, setMessageInputValue] = useState("");
@@ -27,17 +39,16 @@ const ChatComponent = () => {
   const [userChats, setUserChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChats, setFilteredChats] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
 
   const getAllUsers = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("uid", "!=", login.user.uid)
-    );
+    const q = query(collection(db, "users"), where("uid", "!=", curentUserId));
     const querySnapshot = await getDocs(q);
     const allUsers = [];
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
-      console.log(doc.id, " => user ", doc.data());
+      // setCurrentChat(allUsers[0]);
+      // console.log(doc.id, " => user ", doc.data());
     });
     setUserChats(allUsers);
   };
@@ -50,6 +61,51 @@ const ChatComponent = () => {
     );
     setFilteredChats(filteredUsers);
   }, [userChats, searchQuery]);
+
+  const chatId = (curentId) => {
+    let id = "";
+    if (curentUserId < curentId) {
+      id = `${curentUserId}${curentId}`;
+    } else {
+      id = `${curentId}${curentUserId}`;
+    }
+    return id;
+  };
+  const sendMessage = async () => {
+    setMessageInputValue("");
+    const docRef = await addDoc(collection(db, "messages"), {
+      message: messageInputValue,
+      senderName: login.user.email.slice(0,login.user.email.indexOf("@")),
+      sender: curentUserId,
+      reciever: currentChat.id,
+      recieverName : currentChat.name,
+      timestamp: serverTimestamp(),
+      chatId: chatId(currentChat.id),
+    });
+    console.log("Document written with ID: ", docRef.id);
+  };
+  const getAllMessages =async () => {
+    const q= query(
+      collection(db, "messages"),
+      where("chatId", "==", chatId(currentChat.id)),
+      orderBy("timestamp", "asc")
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const messages = [];
+      querySnapshot.forEach((doc) => {
+        messages.push({
+          ...doc.data(),
+          id: doc.id,
+          direction: doc.data().sender === curentUserId ? "outgoing" : "incoming",
+        });
+      });
+      setChatMessages(messages);
+    });
+  };
+  useEffect(()=>{
+    getAllMessages()
+  },[currentChat])
+
 
   return (
     <>
@@ -66,7 +122,7 @@ const ChatComponent = () => {
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[#c6e3fa] rounded-none placeholder:text-gray-900 poppins mb-2 py-2"
+              className="bg-[#f6fbff] rounded-none placeholder:text-gray-900 poppins mb-2 py-3 "
             />
             <ConversationList>
               {filteredChats.length === 0 ? (
@@ -94,53 +150,72 @@ const ChatComponent = () => {
             </ConversationList>
           </Sidebar>
 
-          <ChatContainer style={chatContainerStyle} className="poppins">
-            <ConversationHeader className="poppins">
-              <ConversationHeader.Back />
-              <Avatar
-                src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentChat.name}`}
-              />
-              <ConversationHeader.Content
-                className="capitalize"
-                userName={currentChat.name}
-              />
-            </ConversationHeader>
-            <MessageList
-              typingIndicator={<TypingIndicator content="Zoe is typing" />}
-            >
-              <MessageSeparator content="Saturday, 30 November 2019" />
-
-              <Message
-                model={{
-                  message: "Hello my friend",
-                  sentTime: "15 mins ago",
-                  sender: "Zoe",
-                  direction: "incoming",
-                  position: "single",
-                }}
+          {Object.keys(currentChat).length != 0 ? (
+            <ChatContainer style={chatContainerStyle} className="poppins">
+              <ConversationHeader className="poppins">
+                <ConversationHeader.Back />
+                <Avatar
+                  src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentChat.name}`}
+                />
+                <ConversationHeader.Content
+                  className="capitalize"
+                  userName={currentChat.name}
+                />
+              </ConversationHeader>
+              <MessageList
+                typingIndicator={<TypingIndicator content="Zoe is typing" />}
               >
-                <Avatar src="" name="Zoe" />
-              </Message>
+                {chatMessages.map((v,i) => (
+                  <Message
+                  key={i}
+                    model={{
+                      message: v.message,
+                      direction:v.direction,
 
-              <Message
-                model={{
-                  message: "Hello my friend",
-                  sentTime: "15 mins ago",
-                  sender: "Zoe",
-                  direction: "incoming",
-                  position: "last",
-                }}
-              >
-                <Avatar src="" name="Zoe" />
-              </Message>
-            </MessageList>
-            <MessageInput
-              placeholder="Type a message"
-              value={messageInputValue}
-              onChange={(val) => setMessageInputValue(val)}
-              onSend={() => setMessageInputValue("")}
-            />
-          </ChatContainer>
+                    }}
+                  >
+                    <Avatar src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.direction == "sender" ? v.senderName :v.recieverName}`} />
+                  </Message>
+                ))}
+                {/* <Message
+                  model={{
+                    message: "Hello my friend",
+                    sentTime: "15 mins ago",
+                    sender: "Zoe",
+                    direction: "incoming",
+                  }}
+                >
+                  <Avatar src="" />
+                </Message>
+
+                <Message
+                  model={{
+                    message: "Hello my friend",
+                    sentTime: "15 mins ago",
+                    sender: "Zoe",
+                    direction: "outgoing",
+                    position: "last",
+                  }}
+                >
+                  <Avatar src="" />
+                </Message> */}
+              </MessageList>
+              <MessageInput
+                placeholder="Type a message"
+                value={messageInputValue}
+                onChange={(val) => setMessageInputValue(val)}
+                onSend={sendMessage}
+              />
+            </ChatContainer>
+          ) : (
+            <div className="flex mx-auto justify-center items-center ">
+              <EmptyCart
+                class_name={"font-semibold"}
+                description={`Interact the user with clear and concise information, maintaining a professional tone and addressing their concerns promptly. `}
+                show={"none"}
+              />
+            </div>
+          )}
         </MainContainer>
       </div>
     </>
