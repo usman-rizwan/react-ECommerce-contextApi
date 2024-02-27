@@ -135,7 +135,7 @@ const OrderData = () => {
             }}
             className="text-red-600 hover:text-red-600"
           >
-            close
+            Close
           </Button>
         </Space>
       </div>
@@ -171,6 +171,12 @@ const OrderData = () => {
   });
 
   const columns = [
+    {
+      title: "Order Id",
+      dataIndex: "orderId",
+      key: "id",
+      ...getColumnSearchProps("orderId"),
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -215,6 +221,8 @@ const OrderData = () => {
       <Table
         columns={columns}
         dataSource={userData}
+        pagination={{ pageSize: 5 }}
+        scroll={{ x: true }}
         className="mt-5 container mx-auto capitalize"
       />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
