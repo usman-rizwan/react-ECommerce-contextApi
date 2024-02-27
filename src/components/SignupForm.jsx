@@ -42,7 +42,7 @@ const SignupForm = ({ registerUser }) => {
               },
               {
                pattern:/^[a-zA-Z]+$/ ,
-                message:"Numbers and special charachters not allowed"
+                message:"Numbers ,spaces and special charachters not allowed"
               },
               
             ]}
