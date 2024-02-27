@@ -23,6 +23,7 @@ const ChatComponent = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [messageInputValue, setMessageInputValue] = useState("");
   const [chatContainerStyle, setChatContainerStyle] = useState({});
+  const [currentChat, setCurrentChat] = useState({});
   const [userChats, setUserChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChats, setFilteredChats] = useState([]);
@@ -57,7 +58,7 @@ const ChatComponent = () => {
           height: "90vh",
           position: "relative",
         }}
-        className="container mt-3 mx-auto  "
+        className="container mt-3 mx-auto poppins"
       >
         <MainContainer responsive>
           <Sidebar position="left" scrollable={false}>
@@ -65,11 +66,13 @@ const ChatComponent = () => {
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[#c6e3fa] "
+              className="bg-[#c6e3fa] rounded-none placeholder:text-gray-900 poppins mb-2 py-2"
             />
             <ConversationList>
               {filteredChats.length === 0 ? (
-                <div>No user found</div>
+                <div className="flex justify-center items-center mt-2 font-light">
+                  No user "{searchQuery.slice(0, 15)}" found!
+                </div>
               ) : (
                 filteredChats.map((v) => (
                   <Conversation
@@ -77,6 +80,8 @@ const ChatComponent = () => {
                     name={v.name}
                     lastSenderName="Lilly"
                     info="Yes, I can do it for you"
+                    onClick={() => setCurrentChat(v)}
+                    className="poppins"
                   >
                     <Avatar
                       src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.name}`}
@@ -89,13 +94,15 @@ const ChatComponent = () => {
             </ConversationList>
           </Sidebar>
 
-          <ChatContainer style={chatContainerStyle}>
-            <ConversationHeader>
+          <ChatContainer style={chatContainerStyle} className="poppins">
+            <ConversationHeader className="poppins">
               <ConversationHeader.Back />
-              <Avatar src="" name="Zoe" />
+              <Avatar
+                src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentChat.name}`}
+              />
               <ConversationHeader.Content
-                userName="Zoe"
-                info="Active 10 mins ago"
+                className="capitalize"
+                userName={currentChat.name}
               />
             </ConversationHeader>
             <MessageList
