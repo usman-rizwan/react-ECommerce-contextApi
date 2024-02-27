@@ -14,6 +14,7 @@ import Highlighter from "react-highlight-words";
 import { collection, query, where, onSnapshot, db } from "../db/index";
 import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
+import { Link } from "react-router-dom";
 
 const OrderData = () => {
   const { login } = useContext(User);
@@ -248,6 +249,9 @@ const OrderData = () => {
               <ModalFooter>
                 <NextButton color="danger" variant="light" onPress={onClose}>
                   Close
+                </NextButton>
+                <NextButton color="primary" variant="flat">
+                <Link to={'/chat'}>Chat Seller</Link>
                 </NextButton>
               </ModalFooter>
             </>
