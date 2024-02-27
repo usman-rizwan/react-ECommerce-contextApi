@@ -42,14 +42,19 @@ const ChatComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
 
   const getAllUsers = async () => {
-    const q = query(collection(db, "users"), where("uid", "!=", curentUserId));
+    let q;
+    if (login.user.email === "admin@gmail.com") {
+      q = query(collection(db, "users"), where("uid", "!=", curentUserId));
+    } else {
+      q = query(collection(db, "users"), where("email", "==", "admin@gmail.com"));
+    }
+
     const querySnapshot = await getDocs(q);
     const allUsers = [];
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
-      // setCurrentChat(allUsers[0]);
-      // console.log(doc.id, " => user ", doc.data());
     });
+    setCurrentChat(allUsers[0])
     setUserChats(allUsers);
   };
   useEffect(() => {
@@ -171,34 +176,11 @@ const ChatComponent = () => {
                     model={{
                       message: v.message,
                       direction:v.direction,
-
                     }}
                   >
                     <Avatar src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.direction == "sender" ? v.senderName :v.recieverName}`} />
                   </Message>
                 ))}
-                {/* <Message
-                  model={{
-                    message: "Hello my friend",
-                    sentTime: "15 mins ago",
-                    sender: "Zoe",
-                    direction: "incoming",
-                  }}
-                >
-                  <Avatar src="" />
-                </Message>
-
-                <Message
-                  model={{
-                    message: "Hello my friend",
-                    sentTime: "15 mins ago",
-                    sender: "Zoe",
-                    direction: "outgoing",
-                    position: "last",
-                  }}
-                >
-                  <Avatar src="" />
-                </Message> */}
               </MessageList>
               <MessageInput
                 placeholder="Type a message"
