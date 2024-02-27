@@ -15,7 +15,7 @@ const LoginPage = () => {
         // Signed in
         const user = userCredential.user;
         message.success("User logged in successfully");
-        console.log(user);
+        // console.log(user);
         setLoading(false);
 
         // ...

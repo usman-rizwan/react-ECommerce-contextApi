@@ -38,6 +38,7 @@ const ChatComponent = () => {
   const [currentChat, setCurrentChat] = useState({});
   const [userChats, setUserChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [checkUser , setCheckUser] =useState()
   const [filteredChats, setFilteredChats] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
 
@@ -45,8 +46,10 @@ const ChatComponent = () => {
     let q;
     if (login.user.email === "admin@gmail.com") {
       q = query(collection(db, "users"), where("uid", "!=", curentUserId));
+      setCheckUser(false);
     } else {
       q = query(collection(db, "users"), where("email", "==", "admin@gmail.com"));
+      setCheckUser(true)
     }
 
     const querySnapshot = await getDocs(q);
@@ -54,7 +57,7 @@ const ChatComponent = () => {
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
     });
-    setCurrentChat(allUsers[0])
+    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0])
     setUserChats(allUsers);
   };
   useEffect(() => {
@@ -124,6 +127,7 @@ const ChatComponent = () => {
         <MainContainer responsive>
           <Sidebar position="left" scrollable={false}>
             <Input
+            disabled={checkUser}
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
