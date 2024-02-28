@@ -15,6 +15,7 @@ import { collection, onSnapshot, db, doc, updateDoc } from "../db/index";
 import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
 import {toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const AdminData = () => {
   const { login } = useContext(User);
@@ -330,6 +331,9 @@ const AdminData = () => {
               <ModalFooter>
                 <NextButton color="danger" variant="light" onPress={onClose}>
                   Close
+                </NextButton>
+                <NextButton color="primary" variant="flat">
+                <Link to={'/chat'}>Chat Now</Link>
                 </NextButton>
               </ModalFooter>
             </>
