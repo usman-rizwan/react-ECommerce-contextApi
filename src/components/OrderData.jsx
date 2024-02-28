@@ -200,7 +200,27 @@ const OrderData = () => {
     {
       title: "Status",
       dataIndex: "status",
-      key: "address",
+      key: "status",
+      ...getColumnSearchProps("status"),
+      render: (text, record) => {
+        let statusColor;
+        switch (record.status) {
+          case "accepted":
+            statusColor = "bg-green-500";
+            break;
+          case "rejected":
+            statusColor = "bg-red-500";
+            break;
+          default:
+            statusColor = "bg-yellow-500";
+        }
+    
+        return (
+          <span className={`${statusColor} text-white p-1 rounded`}>
+            {record.status}
+          </span>
+        );
+      },
     },
     {
       title: " Amount",
