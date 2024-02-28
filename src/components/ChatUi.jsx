@@ -23,11 +23,14 @@ import {
   addDoc,
   serverTimestamp,
   orderBy,
-  onSnapshot 
+  onSnapshot,
+  updateDoc,
+  doc,
 } from "../db/index";
 import { Input, message } from "antd";
 import User from "../context";
 import EmptyCart from "./EmptyCart";
+import { m } from "framer-motion";
 const ChatComponent = () => {
   const { login } = useContext(User);
   const curentUserId = login.user.uid;
@@ -38,7 +41,7 @@ const ChatComponent = () => {
   const [currentChat, setCurrentChat] = useState({});
   const [userChats, setUserChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [checkUser , setCheckUser] =useState()
+  const [checkUser, setCheckUser] = useState();
   const [filteredChats, setFilteredChats] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
 
@@ -48,8 +51,11 @@ const ChatComponent = () => {
       q = query(collection(db, "users"), where("uid", "!=", curentUserId));
       setCheckUser(false);
     } else {
-      q = query(collection(db, "users"), where("email", "==", "admin@gmail.com"));
-      setCheckUser(true)
+      q = query(
+        collection(db, "users"),
+        where("email", "==", "admin@gmail.com")
+      );
+      setCheckUser(true);
     }
 
     const querySnapshot = await getDocs(q);
@@ -57,7 +63,7 @@ const ChatComponent = () => {
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
     });
-    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0])
+    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0]);
     setUserChats(allUsers);
   };
   useEffect(() => {
@@ -77,23 +83,39 @@ const ChatComponent = () => {
     } else {
       id = `${curentId}${curentUserId}`;
     }
+    console.log("currentuser " , curentUserId)
+    console.log("curentId " , curentId)
     return id;
   };
   const sendMessage = async () => {
     setMessageInputValue("");
     const docRef = await addDoc(collection(db, "messages"), {
-      message: messageInputValue,
-      senderName: login.user.email.slice(0,login.user.email.indexOf("@")),
+      message: messageInputValue.trim(),
+      senderName: login.user.email.slice(0, login.user.email.indexOf("@")),
       sender: curentUserId,
       reciever: currentChat.id,
-      recieverName : currentChat.name,
+      recieverName: currentChat.name,
       timestamp: serverTimestamp(),
       chatId: chatId(currentChat.id),
     });
+    console.log(currentChat.id)
+    console.log(curentUserId)
+    await updateDoc(doc(db, "users", currentChat.id), {
+      [`lastMessages.${chatId(currentChat.id)}`]: {
+        lastMessage: messageInputValue.trim(),
+        timestamp: serverTimestamp(),
+      },
+    });
+    await updateDoc(doc(db, "users", curentUserId), {
+      [`lastMessages.${chatId(currentChat.id)}`]: {
+        lastMessage: messageInputValue.trim(),
+        timestamp: serverTimestamp(),
+      },
+    });
     console.log("Document written with ID: ", docRef.id);
   };
-  const getAllMessages =async () => {
-    const q= query(
+  const getAllMessages = async () => {
+    const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId(currentChat.id)),
       orderBy("timestamp", "asc")
@@ -104,17 +126,17 @@ const ChatComponent = () => {
         messages.push({
           ...doc.data(),
           id: doc.id,
-          direction: doc.data().sender === curentUserId ? "outgoing" : "incoming",
+          direction:
+            doc.data().sender === curentUserId ? "outgoing" : "incoming",
         });
       });
       setChatMessages(messages);
     });
   };
-  useEffect(()=>{
-    getAllMessages()
-  },[currentChat])
-
-
+  useEffect(() => {
+    getAllMessages();
+  }, [currentChat]);
+console.log(filteredChats)
   return (
     <>
       <div
@@ -127,7 +149,7 @@ const ChatComponent = () => {
         <MainContainer responsive>
           <Sidebar position="left" scrollable={false}>
             <Input
-            disabled={checkUser}
+              disabled={checkUser}
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -143,9 +165,9 @@ const ChatComponent = () => {
                   <Conversation
                     key={v.id}
                     name={v.name}
-                    lastSenderName="Lilly"
-                    info="Yes, I can do it for you"
-                    onClick={() => setCurrentChat(v)}
+                    // info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
+                    info={<div  dangerouslySetInnerHTML={{ __html: v?.lastMessages?.[chatId(v.id)]?.lastMessage || "" }} className="bg-transparent "></div>}
+                    onClick={() => setCurrentChat(v)} 
                     className="poppins"
                   >
                     <Avatar
@@ -153,6 +175,8 @@ const ChatComponent = () => {
                       name="Lilly"
                       status="available"
                     />
+                    {console.log("lastmessage",v?.lastMessages?.[chatId(v.id)])}
+                    {console.log(v)}
                   </Conversation>
                 ))
               )}
@@ -174,15 +198,19 @@ const ChatComponent = () => {
               <MessageList
                 typingIndicator={<TypingIndicator content="Zoe is typing" />}
               >
-                {chatMessages.map((v,i) => (
+                {chatMessages.map((v, i) => (
                   <Message
-                  key={i}
+                    key={i}
                     model={{
                       message: v.message,
-                      direction:v.direction,
+                      direction: v.direction,
                     }}
                   >
-                    <Avatar src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.direction == "sender" ? v.senderName :v.recieverName}`} />
+                    <Avatar
+                      src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${
+                        v.direction == "sender" ? v.senderName : v.recieverName
+                      }`}
+                    />
                   </Message>
                 ))}
               </MessageList>
