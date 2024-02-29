@@ -181,7 +181,6 @@ const OrderData = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      ...getColumnSearchProps("name"),
     },
     {
       title: "Items",
