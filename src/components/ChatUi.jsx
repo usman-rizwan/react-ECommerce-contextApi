@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
   MainContainer,
@@ -39,6 +39,8 @@ const ChatComponent = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [messageInputValue, setMessageInputValue] = useState("");
   const [chatContainerStyle, setChatContainerStyle] = useState({});
+  const [conversationContentStyle, setConversationContentStyle] = useState({});
+  const [conversationAvatarStyle, setConversationAvatarStyle] = useState({});
   const [currentChat, setCurrentChat] = useState({});
   const [userChats, setUserChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,11 +67,7 @@ const ChatComponent = () => {
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
     });
-    login.user.email != "admin@gmail.com" &&
-      setCurrentChat(allUsers[0]) &&
-      searchParams.get("chatId", allUsers[0]) &&
-      navigate(`/chat?${searchParams}`);
-
+    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0]);
     setUserChats(allUsers);
   };
   useEffect(() => {
@@ -81,7 +79,37 @@ const ChatComponent = () => {
     );
     setFilteredChats(filteredUsers);
   }, [userChats, searchQuery]);
-
+  useEffect(() => {
+    if (sidebarVisible) {
+      setSidebarStyle({
+        display: "flex",
+        flexBasis: "auto",
+        width: "100%",
+        maxWidth: "100%",
+      });
+      setConversationContentStyle({
+        display: "flex",
+      });
+      setConversationAvatarStyle({
+        marginRight: "1em",
+      });
+      setChatContainerStyle({
+        display: "none",
+      });
+    } else {
+      setSidebarStyle({});
+      setConversationContentStyle({});
+      setConversationAvatarStyle({});
+      setChatContainerStyle({});
+    }
+  }, [
+    sidebarVisible,
+    setSidebarVisible,
+    setConversationContentStyle,
+    setConversationAvatarStyle,
+    setSidebarStyle,
+    setChatContainerStyle,
+  ]);
   const chatId = (curentId) => {
     let id = "";
     if (curentUserId < curentId) {
@@ -120,6 +148,13 @@ const ChatComponent = () => {
     });
     console.log("Document written with ID: ", docRef.id);
   };
+  const handleBackClick = () => setSidebarVisible(!sidebarVisible);
+
+  const handleConversationClick = useCallback(() => {
+    if (sidebarVisible) {
+      setSidebarVisible(false);
+    }
+  }, [sidebarVisible, setSidebarVisible]);
   const getAllMessages = async () => {
     const q = query(
       collection(db, "messages"),
@@ -186,6 +221,7 @@ const ChatComponent = () => {
                       ></div>
                     }
                     onClick={() => {
+                      handleConversationClick()
                       setCurrentChat(v);
                       searchParams.set("chatId", v.id);
                       navigate(`/chat?${searchParams}`);
@@ -208,7 +244,7 @@ const ChatComponent = () => {
           {Object.keys(currentChat).length != 0 ? (
             <ChatContainer style={chatContainerStyle} className="poppins">
               <ConversationHeader className="poppins">
-                <ConversationHeader.Back />
+                <ConversationHeader.Back onClick={handleBackClick} />
                 <Avatar
                   src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentChat.name}`}
                 />
