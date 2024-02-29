@@ -27,9 +27,10 @@ import {
   updateDoc,
   doc,
 } from "../db/index";
-import { Input, message } from "antd";
+import { Input } from "antd";
 import User from "../context";
 import EmptyCart from "./EmptyCart";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { m } from "framer-motion";
 const ChatComponent = () => {
   const { login } = useContext(User);
@@ -44,7 +45,8 @@ const ChatComponent = () => {
   const [checkUser, setCheckUser] = useState();
   const [filteredChats, setFilteredChats] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const getAllUsers = async () => {
     let q;
     if (login.user.email === "admin@gmail.com") {
@@ -63,7 +65,11 @@ const ChatComponent = () => {
     querySnapshot.forEach((doc) => {
       allUsers.push({ id: doc.id, ...doc.data() });
     });
-    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0]);
+    login.user.email != "admin@gmail.com" &&
+      setCurrentChat(allUsers[0]) &&
+      searchParams.get("chatId", allUsers[0]) &&
+      navigate(`/chat?${searchParams}`);
+
     setUserChats(allUsers);
   };
   useEffect(() => {
@@ -83,8 +89,8 @@ const ChatComponent = () => {
     } else {
       id = `${curentId}${curentUserId}`;
     }
-    console.log("currentuser " , curentUserId)
-    console.log("curentId " , curentId)
+    // console.log("currentuser " , curentUserId)
+    // console.log("curentId " , curentId)
     return id;
   };
   const sendMessage = async () => {
@@ -98,8 +104,8 @@ const ChatComponent = () => {
       timestamp: serverTimestamp(),
       chatId: chatId(currentChat.id),
     });
-    console.log(currentChat.id)
-    console.log(curentUserId)
+    console.log(currentChat.id);
+    console.log(curentUserId);
     await updateDoc(doc(db, "users", currentChat.id), {
       [`lastMessages.${chatId(currentChat.id)}`]: {
         lastMessage: messageInputValue.trim(),
@@ -136,7 +142,7 @@ const ChatComponent = () => {
   useEffect(() => {
     getAllMessages();
   }, [currentChat]);
-console.log(filteredChats)
+  // console.log(filteredChats)
   return (
     <>
       <div
@@ -163,11 +169,27 @@ console.log(filteredChats)
               ) : (
                 filteredChats.map((v) => (
                   <Conversation
+                    style={{
+                      backgroundColor:
+                        searchParams.get("chatId") === v.id ? "#a8ceec" : "",
+                    }}
                     key={v.id}
                     name={v.name}
                     // info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
-                    info={<div  dangerouslySetInnerHTML={{ __html: v?.lastMessages?.[chatId(v.id)]?.lastMessage || "" }} className="bg-transparent "></div>}
-                    onClick={() => setCurrentChat(v)} 
+                    info={
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            v?.lastMessages?.[chatId(v.id)]?.lastMessage || "",
+                        }}
+                        className="bg-transparent "
+                      ></div>
+                    }
+                    onClick={() => {
+                      setCurrentChat(v);
+                      searchParams.set("chatId", v.id);
+                      navigate(`/chat?${searchParams}`);
+                    }}
                     className="poppins"
                   >
                     <Avatar
@@ -175,8 +197,8 @@ console.log(filteredChats)
                       name="Lilly"
                       status="available"
                     />
-                    {console.log("lastmessage",v?.lastMessages?.[chatId(v.id)])}
-                    {console.log(v)}
+                    {/* {console.log("lastmessage",v?.lastMessages?.[chatId(v.id)])}
+                    {console.log(v)} */}
                   </Conversation>
                 ))
               )}
