@@ -44,7 +44,7 @@ const CartDrawer = ({ open, setOpen }) => {
                 action === "add"
                   ? item.rating.count > item.qty
                     ? item.qty + 1
-                    : message.error("Item limit exceed") && item.qty
+                    : toast.error("Item limit exceed") && item.qty
                   : Math.max(item.qty - 1, 1),
             }
           : item
