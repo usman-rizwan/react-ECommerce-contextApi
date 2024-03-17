@@ -22,7 +22,7 @@ const CartDrawer = ({ open, setOpen }) => {
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem("cart")) || [];
     setCartData(storedCartData);
-  }, []);
+  }, [cartData]);
 
   const delItem = (id) => {
     const updatedCartData = cartData.filter((item) => item.id !== id);
@@ -59,6 +59,8 @@ const CartDrawer = ({ open, setOpen }) => {
 
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
+
+
   };
 
   return (
