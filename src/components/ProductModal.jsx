@@ -25,7 +25,7 @@ import { Image, Space ,notification } from 'antd';
 export default function ProductModal({ id }) {
   const {cart , setCart} = useContext(Cart)
   const { isOpen, onOpen, onOpenChange ,onClose} = useDisclosure();
-  const [backdrop, setBackdrop] = useState();
+  const [backdrop, setBackdrop] = useState(null);
   const [productDetails, setProductDetails] = useState({});
   const [loading, setloading] = useState(true);
   const [scrollBehavior, setScrollBehavior] = useState("inside");
@@ -48,7 +48,7 @@ export default function ProductModal({ id }) {
   }, []);  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
   const addToCartHandler = (data) => {
     console.log(data);
   
