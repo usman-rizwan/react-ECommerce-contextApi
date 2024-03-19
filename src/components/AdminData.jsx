@@ -43,9 +43,9 @@ const AdminData = () => {
       setUserData(userOrderData);
     });
   };
-  {
-    console.log(userData);
-  }
+  // {
+  //   console.log(userData);
+  // }
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -279,7 +279,7 @@ const AdminData = () => {
         return (
           <>
             <Select
-              defaultValue="Accept/Reject"
+              defaultValue={record.status}
               style={{ width: 120 }}
               onChange={(value) => {
                 setSelectedOrderState(value);

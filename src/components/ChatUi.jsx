@@ -19,7 +19,6 @@ import {
   collection,
   query,
   where,
-  getDocs,
   addDoc,
   serverTimestamp,
   orderBy,
@@ -31,6 +30,7 @@ import { Input } from "antd";
 import User from "../context";
 import EmptyCart from "./EmptyCart";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import { m } from "framer-motion";
 const ChatComponent = () => {
   const { login } = useContext(User);
@@ -49,6 +49,7 @@ const ChatComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [value] = useDebounce(messageInputValue, 1700);
   const getAllUsers = async () => {
     let q;
     if (login.user.email === "admin@gmail.com") {
@@ -61,14 +62,18 @@ const ChatComponent = () => {
       );
       setCheckUser(true);
     }
-
-    const querySnapshot = await getDocs(q);
-    const allUsers = [];
-    querySnapshot.forEach((doc) => {
-      allUsers.push({ id: doc.id, ...doc.data() });
+  
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const allUsers = [];
+      querySnapshot.forEach((doc) => {
+        allUsers.push({ id: doc.id, ...doc.data() });
+      });
+  
+      login.user.email !== "admin@gmail.com" && setCurrentChat(allUsers[0]);
+      setUserChats(allUsers);
     });
-    login.user.email != "admin@gmail.com" && setCurrentChat(allUsers[0]);
-    setUserChats(allUsers);
+  
+    
   };
   useEffect(() => {
     getAllUsers();
@@ -174,10 +179,52 @@ const ChatComponent = () => {
       setChatMessages(messages);
     });
   };
+
+
+
+  
+  const sendTyping = async (typing) => {
+
+    const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[curentUserId];
+    console.log("isTyping", isTyping)
+
+    if (!isTyping && typing) {
+        console.log("api call")
+        await updateDoc(doc(db, "users", currentChat.uid), {
+            [`isTyping.${chatId(currentChat.uid)}.${curentUserId}`]: typing
+        });
+        await updateDoc(doc(db, "users",curentUserId), {
+            [`isTyping.${chatId(currentChat.uid)}.${curentUserId}`]: typing
+        });
+    }
+    if (!typing) {
+        await updateDoc(doc(db, "users", currentChat.uid), {
+            [`isTyping.${chatId(currentChat.uid)}.${curentUserId}`]: typing
+        }); await updateDoc(doc(db, "users", curentUserId), {
+            [`isTyping.${chatId(currentChat.uid)}.${curentUserId}`]: typing
+        });
+    }
+
+}
+
+
+
+
+  useEffect(() => {
+    if (messageInputValue) {
+      console.log("typing");
+      sendTyping(true);
+    }
+    if (value === messageInputValue) {
+      console.log("typing stopped");
+      sendTyping(false);
+    }
+  }, [messageInputValue, value ]);
+
   useEffect(() => {
     getAllMessages();
   }, [currentChat]);
-  // console.log(filteredChats)
+  const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
   return (
     <>
       <div
@@ -221,7 +268,7 @@ const ChatComponent = () => {
                       ></div>
                     }
                     onClick={() => {
-                      handleConversationClick()
+                      handleConversationClick();
                       setCurrentChat(v);
                       searchParams.set("chatId", v.id);
                       navigate(`/chat?${searchParams}`);
@@ -254,7 +301,9 @@ const ChatComponent = () => {
                 />
               </ConversationHeader>
               <MessageList
-                typingIndicator={<TypingIndicator content="Zoe is typing" />}
+                typingIndicator={ isTyping ?
+                  <TypingIndicator content={`Typing`} /> : false 
+                }
               >
                 {chatMessages.map((v, i) => (
                   <Message

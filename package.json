@@ -24,7 +24,8 @@
     "react-router-dom": "^6.21.3",
     "runes2": "^1.1.4",
     "sass": "^1.70.0",
-    "sonner": "^1.4.0"
+    "sonner": "^1.4.0",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
