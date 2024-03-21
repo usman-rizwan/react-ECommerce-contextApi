@@ -35,12 +35,16 @@ export default function ProductModal({ id }) {
   };
 
   const fetchData = useCallback(() => {
+    setloading(true);
     axios(`https://fakestoreapi.com/products/${id}`)
       .then((res) => {
         setProductDetails(res.data);
         setloading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setloading(false);
+      });
   }, [id]);
   useEffect(() => {
     fetchData();

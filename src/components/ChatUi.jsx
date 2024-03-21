@@ -128,6 +128,7 @@ const ChatComponent = () => {
   };
   const sendMessage = async () => {
     setMessageInputValue("");
+    if (!currentChat.id) return;
     const docRef = await addDoc(collection(db, "messages"), {
       message: messageInputValue.trim(),
       senderName: login.user.email.slice(0, login.user.email.indexOf("@")),
@@ -189,7 +190,7 @@ const ChatComponent = () => {
     console.log("isTyping", isTyping)
 
     if (!isTyping && typing) {
-        console.log("api call")
+        // console.log("api call")
         await updateDoc(doc(db, "users", currentChat.uid), {
             [`isTyping.${chatId(currentChat.uid)}.${curentUserId}`]: typing
         });
@@ -222,9 +223,13 @@ const ChatComponent = () => {
   }, [messageInputValue, value ]);
 
   useEffect(() => {
-    getAllMessages();
+    if (currentChat?.id) {
+      getAllMessages();
+    }
   }, [currentChat]);
-  const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
+
+  
+  const isTyping = currentChat?.isTyping?.[chatId(currentChat.id)]?.[currentChat.uid];
   return (
     <>
       <div
@@ -277,7 +282,6 @@ const ChatComponent = () => {
                   >
                     <Avatar
                       src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.name}`}
-                      name="Lilly"
                       status="available"
                     />
                     {/* {console.log("lastmessage",v?.lastMessages?.[chatId(v.id)])}
@@ -315,7 +319,7 @@ const ChatComponent = () => {
                   >
                     <Avatar
                       src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${
-                        v.direction == "sender" ? v.senderName : v.recieverName
+                       curentUserId === v.sender ? login.user.email :currentChat.name
                       }`}
                     />
                   </Message>
