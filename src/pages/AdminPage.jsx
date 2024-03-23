@@ -7,7 +7,7 @@ import AdminData from '../components/AdminData';
 const AdminPage = () => {
   return (
     <div>
-        <OrderNavbar logOut={logout} name={'Admin Page'} path={'chat'} pageName={"Chat"}  />
+        <OrderNavbar logOut={logout} name={'Admin Page'} path={'chat'} pageName={"Chat"} addItems={"Add Items"} locate={"add-products"} />
         <AdminData />
     </div>
   )

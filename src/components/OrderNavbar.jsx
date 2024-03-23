@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { UnorderedListOutlined  } from "@ant-design/icons";
 import User from "../context";
 
-const OrderNavbar = ({ logOut , name,path,pageName }) => {
+const OrderNavbar = ({ logOut , name,path,pageName , addItems ,locate }) => {
     const { login } = useContext(User);
   return (
     <div>
@@ -52,14 +52,21 @@ const OrderNavbar = ({ logOut , name,path,pageName }) => {
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">{login.user.email}</p>
                 </DropdownItem>
-                <DropdownItem key="home" className="h-10 gap-2" color="primary">
+               {addItems && <DropdownItem key="home" className="h-10 gap-2" color="primary">
                   <p>
-                    <Link to={"/"}>
+                    <Link to={`/${locate}`}>
+                      {" "}
+                      <RollbackOutlined /> {addItems}
+                    </Link> 
+                  </p>
+                </DropdownItem> || <DropdownItem key="home" className="h-10 gap-2" color="primary">
+                  <p>
+                    <Link to={`/`}>
                       {" "}
                       <RollbackOutlined /> Back Home
-                    </Link>
+                    </Link> 
                   </p>
-                </DropdownItem> 
+                </DropdownItem> }
                 { pageName &&
                 <DropdownItem key="Order" className="h-10 gap-2" color="secondary">
                   <p >

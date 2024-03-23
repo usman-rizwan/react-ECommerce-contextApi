@@ -11,6 +11,7 @@ import PageNotFound from "../components/PageNotFound";
 import OrderDetails from "../pages/OrderDetails";
 import AdminPage from "../pages/AdminPage";
 import Chat from "../pages/Chat";
+import AddProducts from "../pages/AddProducts";
 
 const AppRouter = () => {
   const { login } = useContext(User);
@@ -49,6 +50,16 @@ const AppRouter = () => {
           element={
             login.userStatus && login.user.email == "admin@gmail.com" ? (
               <AdminPage />
+            ) : (
+              <PageNotFound />
+            )
+          }
+        />
+        <Route
+          path="/add-products"
+          element={
+            login.userStatus && login.user.email == "admin@gmail.com" ? (
+              <AddProducts />
             ) : (
               <PageNotFound />
             )
