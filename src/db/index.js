@@ -20,6 +20,8 @@ import {
   updateDoc,
   orderBy,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBQ4kGo7ysAnwrwptf7b3-NpZYWQm6jqSw",
   authDomain: "epxo-react.firebaseapp.com",
@@ -32,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage();
 
 export {
   app,
@@ -51,5 +54,7 @@ export {
   onSnapshot,
   getDocs,
   updateDoc,
-  orderBy 
+  orderBy ,
+  storage,
+  getStorage, ref, uploadBytesResumable, getDownloadURL 
 };
