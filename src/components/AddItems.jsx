@@ -95,14 +95,13 @@ const MyForm = () => {
       const { file } = data.image;
       const storageRef = ref(storage, `images/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-  
+
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Track upload progress
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
-          // Handle different states if needed
         },
         (error) => {
           console.error("Error:", error);
@@ -111,35 +110,35 @@ const MyForm = () => {
         async () => {
           try {
             const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-  
+
             const formData = {
               username: data.username,
               description: data.description,
               price: data.price,
               qty: data.qty,
               category: data.category,
-              imageUrl: imageUrl, 
+              imageUrl: imageUrl,
             };
-  
+
             // Add data to Firestore
             const docRef = await addDoc(collection(db, "products"), formData);
             await updateDoc(docRef, {
               id: docRef.id,
             });
-  
-            // Reset the form after successful submission
+
+            // console.log("data=-===> before",data)            
+            // console.log("file>>>>>>>>>>>>>>> before",file) 
             reset({
-              username: "Admin", // Reset to default value
+              username: "Admin", 
               description: "",
               price: "",
               qty: "",
-              category: "",
-              image: undefined, // Clear the image field
-            });
-  
-            toast.success("Form submitted successfully!");
+              category: "",  
+              image: undefined,
+              category: undefined, 
+            });          
+            toast.success("Product added successfully!");
             setLoading(false);
-            
           } catch (error) {
             console.error("Error:", error);
             toast.error("An error occurred while getting download URL.");
@@ -153,7 +152,6 @@ const MyForm = () => {
       toast.error("An error occurred. Please try again later.");
     }
   };
-  
 
   const handleImageChange = (info) => {
     const { file, fileList } = info;
@@ -176,20 +174,42 @@ const MyForm = () => {
         placeholder="Enter your username"
         type="text"
         disabled={true}
-        defaultValue="Admin" 
+        defaultValue="Admin"
       />
 
       {errors.username && (
         <p className="text-red-500 text-xs">{errors.username.message}</p>
       )}
+   <CustomInput
+  label="Product Title"
+  name="title"
+  control={control}
+  placeholder="Enter product title"
+  type="text"
+  rules={{ 
+    required: "Title is required",
+    pattern: {
+      value: /^.{25,}$/, 
+      message: "Title must be at least 25 characters long",
+    },
+  }}
+/>
+{errors.title && (
+  <p className="text-red-500 text-xs">{errors.title.message}</p>
+)}
+
 
       <CustomInput
-        label="Description"
+        label="Product Description "
         name="description"
         control={control}
         rules={{
           required: "Description is required",
           validate: (value) => value.trim() !== "" || "Description is required",
+          pattern: {
+            value: /^.{80,}$/, 
+            message: "Description must be proper and at least 70 characters long ",
+          },
         }}
         placeholder="Enter product description"
         type="textarea"
@@ -292,10 +312,10 @@ const MyForm = () => {
               accept="image/png, image/jpeg"
               listType="picture"
               maxCount={1}
-              beforeUpload={() => false} 
+              beforeUpload={() => false}
               onChange={(info) => {
-                field.onChange(info); 
-                handleImageChange(info); 
+                field.onChange(info);
+                handleImageChange(info);
               }}
             >
               <div className="flex justify-center items-center">
@@ -316,13 +336,13 @@ const MyForm = () => {
       </div>
 
       <Button
-  type="primary"
-  htmlType="submit"
-  disabled={loading || !isValid || isSubmitting}
-  className="w-full bg-blue-400"
->
-  {loading ? "Submitting..." : "Submit"}
-</Button>
+        type="primary"
+        htmlType="submit"
+        disabled={loading || !isValid || isSubmitting}
+        className="w-full bg-blue-400"
+      >
+        {loading ? "Posting..." : "Post Product"}
+      </Button>
     </form>
   );
 };
