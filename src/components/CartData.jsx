@@ -32,7 +32,7 @@ const CartData = () => {
         renderItem={(item) => (
           <List.Item className='poppins'>
             <List.Item.Meta
-              avatar={<Image src={item.image} style={{ width: '110px', height: '100px' }} />}
+              avatar={<Image src={item.image || item.imageUrl} style={{ width: '110px', height: '100px' }} />}
               title={<div className='flex justify-between'><span className='capitalize font-medium'>{item.title}</span><span><Chip color="warning" variant="dot" className="bg-[#27272a] text-white capitalize ">{item.category}</Chip></span></div>}
               description={<span className='capitalize'>{item.description}</span>}
             />

@@ -282,7 +282,6 @@ const ChatComponent = () => {
                   >
                     <Avatar
                       src={`https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${v.name}`}
-                      status="available"
                     />
                     {/* {console.log("lastmessage",v?.lastMessages?.[chatId(v.id)])}
                     {console.log(v)} */}

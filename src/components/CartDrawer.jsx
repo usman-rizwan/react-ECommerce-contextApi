@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Drawer, Space } from "antd";
+import { Avatar, Badge, Button, Drawer, Space, message } from "antd";
 import {
   Card,
   CardHeader,
@@ -12,7 +12,6 @@ import ButtonGroup from "antd/es/button/button-group";
 import { MinusOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
 const CartDrawer = ({ open, setOpen }) => {
   const [show, setShow] = useState(true);
   const cartDataList = JSON.parse(localStorage.getItem("cart")) || [];
@@ -22,13 +21,13 @@ const CartDrawer = ({ open, setOpen }) => {
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem("cart")) || [];
     setCartData(storedCartData);
-  }, [cartData]);
+  }, []);
 
   const delItem = (id) => {
     const updatedCartData = cartData.filter((item) => item.id !== id);
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
-    toast.success(<span>Item Removed Successfully!</span>);
+    message.success(<span>Item Removed Successfully!</span>);
   };
 
   const updateItemQty = (action, id) => {
@@ -42,9 +41,9 @@ const CartDrawer = ({ open, setOpen }) => {
               ...item,
               qty:
                 action === "add"
-                  ? item.rating.count > item.qty
+                  ? (item.quantity || item.rating.count) > item.qty
                     ? item.qty + 1
-                    : toast.error("Item limit exceed") && item.qty
+                    : message.error("Item limit exceed") && item.qty
                   : Math.max(item.qty - 1, 1),
             }
           : item
@@ -65,22 +64,26 @@ const CartDrawer = ({ open, setOpen }) => {
 
   return (
     <>
-      <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
+      <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)} >
         {cartDataList.length == 0 ? (
           <EmptyCart description={"No items in cart yet ..."} show={"none"} />
         ) : (
           cartDataList.map((value, i) => (
             <Card className="max-w-[400px] mb-5 poppins" key={i}>
               <CardHeader className="flex gap-3">
+                {/* {console.log("value.image ",value.image )}
+                {console.log("value.imageUrl/.........>>> ",value.imageUrl )} */}
                 <Image
                   alt="nextui logo"
                   height={40}
                   radius="sm"
-                  src={value.image}
+                  src={value.image || value.imageUrl}
                   width={40}
                 />
-                <div className="flex flex-col">
-                  <p className="text-md font-semibold">{value.title}</p>
+                <div className="flex flex-col" >
+                  <p className="text-md font-semibold"  style={{ overflowWrap: "break-word" }}>{value.title.length > 150 ? value.title.slice(0,80) + "..." :value.title}</p>
+                  {/* {productDetails.title.length > 150 ?productDetails.title?.slice(0,125) + "...." : productDetails.title} */}
+                  
                   <p className="text-small text-default-500 capitalize">
                     Category: {value.category}
                   </p>
@@ -101,7 +104,7 @@ const CartDrawer = ({ open, setOpen }) => {
                     />
                     <Badge
                       className="mr-2 mt-1"
-                      count={value.qty}
+                      count={value.qty || value.quantity}
                       overflowCount={value.qty >= 100 ? value.qty : undefined}
                     ></Badge>
                     <Button

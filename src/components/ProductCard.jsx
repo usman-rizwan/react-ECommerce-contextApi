@@ -15,7 +15,7 @@ export default function ProductCard({list , viewDetails}) {
       width="100%"
       alt={item.title}
       className="w-full h-[140px] object-contain"
-      src={item.image}
+      src={item.image || item.imageUrl}
     />
   </CardBody>
   <CardFooter className="text-small flex justify-between">

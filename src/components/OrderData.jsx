@@ -58,7 +58,7 @@ const OrderData = () => {
       key: index,
       name: item.title,
       quantity: item.qty,
-      image: item.image,
+      image: item.image || item.imageUrl,
       price: Math.round(item.price)
     }));
     setModalTableData(tableData);
@@ -274,10 +274,10 @@ const OrderData = () => {
             </ModalBody>
               </ModalBody>
               <ModalFooter>
-                <NextButton color="danger" variant="light" onPress={onClose}>
+                <NextButton color="danger" variant="light" onPress={onClose} className="poppins">
                   Close
                 </NextButton>
-                <NextButton color="primary" variant="flat">
+                <NextButton color="primary" variant="flat" className="poppins">
                 <Link to={'/chat'}>Chat Seller</Link>
                 </NextButton>
               </ModalFooter>

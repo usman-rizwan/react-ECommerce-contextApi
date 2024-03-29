@@ -20,13 +20,14 @@ import axios from "axios";
 import { Spinner, Chip } from "@nextui-org/react";
 import ImageLoading from "../assets/loading.gif";
 import { Image, Space, notification } from "antd";
+import { db, collection, getDocs } from "../db/index";
 
 export default function ProductModal({ id }) {
   const { cart, setCart } = useContext(Cart);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [backdrop, setBackdrop] = useState(null);
   const [productDetails, setProductDetails] = useState({});
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [scrollBehavior, setScrollBehavior] = useState("inside");
 
   const handleOpen = (backdrop) => {
@@ -34,21 +35,39 @@ export default function ProductModal({ id }) {
     onOpen();
   };
 
-  const fetchData = useCallback(() => {
-    setloading(true);
-    axios(`https://fakestoreapi.com/products/${id}`)
-      .then((res) => {
-        setProductDetails(res.data);
-        setloading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setloading(false);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      let productData = {};
+      const docRef = collection(db, "products");
+      const querySnapshot = await getDocs(docRef);
+      const firestoreProducts = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.id === id) {
+          productData = data;
+        }
       });
+
+      if (Object.keys(productData).length === 0) {
+        const response = await axios.get(
+          `https://fakestoreapi.com/products/${id}`
+        );
+        productData = response.data;
+      }
+
+      setProductDetails(productData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      setLoading(false);
+    }
   }, [id]);
+
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [fetchData]);
+
   const addToCartHandler = (data) => {
     console.log(data);
 
@@ -100,7 +119,7 @@ export default function ProductModal({ id }) {
         isDismissable={false}
         scrollBehavior={scrollBehavior}
       >
-        <ModalContent className="md:h-[60vh]">
+        <ModalContent className="{`md:h-[50vh]`}">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
@@ -113,7 +132,7 @@ export default function ProductModal({ id }) {
                   <div className=" flex justify-center items-center">
                     <Image
                       width={200}
-                      src={productDetails.image}
+                      src={productDetails.image || productDetails.imageUrl}
                       preview={{
                         toolbarRender: (
                           _,
@@ -152,13 +171,17 @@ export default function ProductModal({ id }) {
                   <Spinner color="primary" className="mt-10 " />
                 ) : (
                   <div className="capitalize outfit">
-                    {productDetails.title}
+                    {productDetails.title.length > 150
+                      ? productDetails.title?.slice(0, 125) + "...."
+                      : productDetails.title}
                   </div>
                 )}
               </ModalHeader>
-              <ModalBody className="capitalize outfit">
+              <ModalBody
+                className="capitalize outfit"
+                style={{ overflowWrap: "break-word" }}
+              >
                 {productDetails.description}
-                <br />
                 <div>
                   {loading ? (
                     ""
@@ -180,12 +203,19 @@ export default function ProductModal({ id }) {
                   )}
                 </div>
               </ModalBody>
+
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  className="poppins"
+                  onPress={onClose}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
+                  className="poppins"
                   onClick={() => addToCartHandler(productDetails)}
                   // onPress={() => console.log(productDetails)}
                 >

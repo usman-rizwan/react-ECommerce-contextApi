@@ -114,8 +114,9 @@ const MyForm = () => {
             const formData = {
               username: data.username,
               description: data.description,
+              title: data.title,
               price: data.price,
-              qty: data.qty,
+              quantity: Number(data.quantity) ,
               category: data.category,
               imageUrl: imageUrl,
             };
@@ -132,7 +133,7 @@ const MyForm = () => {
               username: "Admin", 
               description: "",
               price: "",
-              qty: "",
+              quantity: "",
               category: "",  
               image: undefined,
               category: undefined, 
@@ -240,7 +241,7 @@ const MyForm = () => {
       )}
       <CustomInput
         label="Quantity"
-        name="qty"
+        name="quantity"
         control={control}
         rules={{
           required: "Quantity is required",
@@ -256,8 +257,8 @@ const MyForm = () => {
         placeholder="Enter product quantity"
         type="number"
       />
-      {errors.qty && (
-        <p className="text-red-500 text-xs">{errors.qty.message}</p>
+      {errors.quantity && (
+        <p className="text-red-500 text-xs">{errors.quantity.message}</p>
       )}
 
       <div className="mb-4">
