@@ -21,6 +21,8 @@ import { Spinner, Chip } from "@nextui-org/react";
 import ImageLoading from "../assets/loading.gif";
 import { Image, Space, notification } from "antd";
 import { db, collection, getDocs } from "../db/index";
+import User from "../context";
+import ToolTip from "./PopOver";
 
 export default function ProductModal({ id }) {
   const { cart, setCart } = useContext(Cart);
@@ -29,6 +31,7 @@ export default function ProductModal({ id }) {
   const [productDetails, setProductDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [scrollBehavior, setScrollBehavior] = useState("inside");
+  const {login } = useContext(User)
 
   const handleOpen = (backdrop) => {
     setBackdrop(backdrop);
@@ -37,6 +40,7 @@ export default function ProductModal({ id }) {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    console.log("Modal wala user " , login.userStatus)
     try {
       let productData = {};
       const docRef = collection(db, "products");
@@ -213,14 +217,15 @@ export default function ProductModal({ id }) {
                 >
                   Close
                 </Button>
-                <Button
+             {login.userStatus ?   <Button
                   color="primary"
                   className="poppins"
                   onClick={() => addToCartHandler(productDetails)}
+                 
                   // onPress={() => console.log(productDetails)}
                 >
                   Add To Cart
-                </Button>
+                </Button> : <ToolTip title={"Add To Cart "} val={"Please login to add to cart"}   />}
               </ModalFooter>
             </>
           )}
