@@ -1,15 +1,19 @@
-import { Avatar, Badge, Button, Drawer, Space, message } from "antd";
+import { Image, Badge, Button, Drawer, Space, message } from "antd";
 import {
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   Divider,
-  Image,
 } from "@nextui-org/react";
 import EmptyCart from "./EmptyCart";
 import ButtonGroup from "antd/es/button/button-group";
-import { MinusOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  MinusOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 const CartDrawer = ({ open, setOpen }) => {
@@ -21,7 +25,7 @@ const CartDrawer = ({ open, setOpen }) => {
   useEffect(() => {
     const storedCartData = JSON.parse(localStorage.getItem("cart")) || [];
     setCartData(storedCartData);
-  }, []);
+  }, [open]);
 
   const delItem = (id) => {
     const updatedCartData = cartData.filter((item) => item.id !== id);
@@ -34,7 +38,7 @@ const CartDrawer = ({ open, setOpen }) => {
     let updatedCartData;
     const existingItemIndex = cartData.findIndex((item) => item.id === id);
 
-    if (existingItemIndex !== -1) {      
+    if (existingItemIndex !== -1) {
       updatedCartData = cartData.map((item, index) =>
         index === existingItemIndex
           ? {
@@ -50,7 +54,7 @@ const CartDrawer = ({ open, setOpen }) => {
       );
     } else {
       const newItem = cartDataList.find((item) => item.id === id);
-      console.log("else newItme" , newItem)
+      console.log("else newItme", newItem);
       updatedCartData = newItem
         ? [...cartData, { ...newItem, qty: 1 }]
         : [...cartData];
@@ -58,13 +62,11 @@ const CartDrawer = ({ open, setOpen }) => {
 
     setCartData(updatedCartData);
     localStorage.setItem("cart", JSON.stringify(updatedCartData));
-
-
   };
 
   return (
     <>
-      <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)} >
+      <Drawer title="Cart Details" open={open} onClose={() => setOpen(false)}>
         {cartDataList.length == 0 ? (
           <EmptyCart description={"No items in cart yet ..."} show={"none"} />
         ) : (
@@ -74,16 +76,31 @@ const CartDrawer = ({ open, setOpen }) => {
                 {/* {console.log("value.image ",value.image )}
                 {console.log("value.imageUrl/.........>>> ",value.imageUrl )} */}
                 <Image
-                  alt="nextui logo"
+                  alt={`${value.name}`}
                   height={40}
                   radius="sm"
                   src={value.image || value.imageUrl}
-                  width={40}
+                  width={50}
+                  preview={{
+                    mask: (
+                      <div className="custom-mask">
+                        <EyeOutlined />
+                      </div>
+                    ),
+                  }}
                 />
-                <div className="flex flex-col" >
-                  <p className="text-md font-semibold"  style={{ overflowWrap: "break-word" }}>{value.title.length > 150 ? value.title.slice(0,80) + "..." :value.title}</p>
+
+                <div className="flex flex-col">
+                  <p
+                    className="text-md font-semibold"
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {value.title.length > 150
+                      ? value.title.slice(0, 80) + "..."
+                      : value.title}
+                  </p>
                   {/* {productDetails.title.length > 150 ?productDetails.title?.slice(0,125) + "...." : productDetails.title} */}
-                  
+
                   <p className="text-small text-default-500 capitalize">
                     Category: {value.category}
                   </p>
@@ -114,7 +131,9 @@ const CartDrawer = ({ open, setOpen }) => {
                   </ButtonGroup>
                 </Space>
                 <div>
-               <span className="font-bold">$ {Math.round(value.price  * value.qty)} /-</span>{" "}
+                  <span className="font-bold">
+                    $ {Math.round(value.price * value.qty)} /-
+                  </span>{" "}
                 </div>
                 <div>
                   <DeleteOutlined
@@ -131,7 +150,7 @@ const CartDrawer = ({ open, setOpen }) => {
           <div className="flex-grow ">
             {cartDataList.length > 0 && (
               <Button type="primary" className="bg-blue-500 outfit" block>
-               <Link to={'/checkout'}>Check Out</Link> 
+                <Link to={"/checkout"}>Check Out</Link>
               </Button>
             )}
           </div>

@@ -40,7 +40,6 @@ export default function ProductModal({ id }) {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    console.log("Modal wala user " , login.userStatus)
     try {
       let productData = {};
       const docRef = collection(db, "products");
@@ -94,7 +93,7 @@ export default function ProductModal({ id }) {
 
     notification.success({
       message: "Item Added Successfully",
-      description: `${dataWithQty.title}!`,
+      description: `${dataWithQty.title.length > 150 ?dataWithQty.title.slice(0,125) + "..." : dataWithQty.title }!`,
       duration: 1.5,
     });
 
