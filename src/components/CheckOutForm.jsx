@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { MdAlternateEmail } from "react-icons/md";
+import User from "../context/index.js";
 const { TextArea } = Input;
 
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 const CheckOutForm = ({confirmOrder}) => {
+  const {login} = useContext(User)
+
   return (
     <>
        <div className="d-flex poppins">
@@ -20,6 +23,7 @@ const CheckOutForm = ({confirmOrder}) => {
                     }}
                     initialValues={{
                       remember: true,
+                      email: login.user.email
                     }}
                     onFinish={confirmOrder}
                     onFinishFailed={onFinishFailed}

@@ -11,7 +11,7 @@ import {
   Button as NextButton
 } from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
-import { collection, query, where, onSnapshot, db } from "../db/index";
+import { collection, query, where, onSnapshot, db, orderBy } from "../db/index";
 import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
 import { Link } from "react-router-dom";
@@ -31,7 +31,7 @@ const OrderData = () => {
   }, []);
   const getUserOrder = () => {
     const uid = login.user.uid;
-    const q = query(collection(db, "orders"), where("userUid", "==", `${uid}`));
+    const q = query(collection(db, "orders"), where("userUid", "==", `${uid}`) , orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const userOrderData = [];
       querySnapshot.forEach((doc) => {
@@ -224,6 +224,7 @@ const OrderData = () => {
     {
       title: " Amount",
       dataIndex: "totalAmount",
+      ...getColumnSearchProps("totalAmount"),
       key: "amount",
     },
     {
@@ -231,8 +232,6 @@ const OrderData = () => {
       dataIndex: "address",
       key: "address",
       ...getColumnSearchProps("address"),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ["descend", "ascend"],
     },
   ];
   return (
@@ -240,12 +239,12 @@ const OrderData = () => {
       <Table
         columns={columns}
         dataSource={userData}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 6 }}
         scroll={{ x: true }}
         className="mt-5 container mx-auto capitalize"
       />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
-      <ModalContent style={{height:"50vh"}}>
+      <ModalContent >
           {(onClose) => (
             <>
               <ModalHeader>Items Details</ModalHeader>

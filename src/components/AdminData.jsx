@@ -11,10 +11,18 @@ import {
   Button as NextButton,
 } from "@nextui-org/react";
 import Highlighter from "react-highlight-words";
-import { collection, onSnapshot, db, doc, updateDoc } from "../db/index";
+import {
+  collection,
+  onSnapshot,
+  db,
+  doc,
+  updateDoc,
+  query,
+  orderBy,
+} from "../db/index";
 import { EyeOutlined } from "@ant-design/icons";
 import User from "../context";
-import {toast } from "sonner";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
 const AdminData = () => {
@@ -34,7 +42,7 @@ const AdminData = () => {
     getUserOrder();
   }, []);
   const getUserOrder = () => {
-    const q = collection(db, "orders");
+    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const userOrderData = [];
       querySnapshot.forEach((doc) => {
@@ -44,7 +52,7 @@ const AdminData = () => {
     });
   };
   // {
-  //   console.log(userData);
+  //   console.log(userData , "userData<<<<<<");
   // }
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -61,7 +69,7 @@ const AdminData = () => {
 
     const tableData = items.map((item, index) => ({
       key: index,
-      name: item.title,
+      name: item.title.length > 200 ? item.title.slice(0, 50) + "..." : item.title,
       quantity: item.qty,
       image: item.image || item.imageUrl,
       price: Math.round(item.price),
@@ -251,9 +259,11 @@ const AdminData = () => {
           default:
             statusColor = "bg-yellow-500";
         }
-    
+
         return (
-          <span className={`${statusColor} text-white p-1 rounded`}>
+          <span
+            className={`${statusColor} text-gray-100 p-1 rounded font-bold`}
+          >
             {record.status}
           </span>
         );
@@ -263,14 +273,12 @@ const AdminData = () => {
       title: " Amount",
       dataIndex: "totalAmount",
       key: "amount",
+      ...getColumnSearchProps("totalAmount"),
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
-      ...getColumnSearchProps("address"),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Order state",
@@ -310,55 +318,63 @@ const AdminData = () => {
         columns={columns}
         dataSource={userData}
         className="mt-5 container mx-auto capitalize"
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 6 }}
         scroll={{ x: true }}
         size="small"
       />
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
-        <ModalContent style={{ height: "50vh" }}>
-          {(onClose) => (
-            <>
-              <ModalHeader>Order Details</ModalHeader>
-              <ModalBody>
-                <ModalBody>
-                  <Table
-                    columns={[
-                      {
-                        title: "Image",
-                        dataIndex: "image",
-                        key: "image",
-                        render: (image) => (
-                          <img
-                            src={image}
-                            alt="Item"
-                            style={{ width: "50px", height: "50px" }}
-                          />
-                        ),
-                      },
-                      { title: "Name", dataIndex: "name", key: "name" },
-                      {
-                        title: "Quantity",
-                        dataIndex: "quantity",
-                        key: "quantity",
-                      },
-                      { title: "Price", dataIndex: "price", key: "price" },
-                    ]}
-                    dataSource={modalTableData}
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
+  <ModalContent>
+    {(onClose) => (
+      <>
+        <ModalHeader>Order Details</ModalHeader>
+
+        <ModalBody>
+          <Table
+            pagination={{ pageSize: 4 }}
+            columns={[
+              {
+                title: "Image",
+                dataIndex: "image",
+                key: "image",
+                render: (image) => (
+                  <img
+                    src={image}
+                    alt="Item"
+                    style={{ width: "50px", height: "50px" }}
                   />
-                </ModalBody>
-              </ModalBody>
-              <ModalFooter>
-                <NextButton color="danger" variant="light" onPress={onClose} className="poppins">
-                  Close
-                </NextButton>
-                <NextButton color="primary" variant="flat" className="poppins">
-                <Link to={'/chat'}>Chat Now</Link>
-                </NextButton>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+                ),
+              },
+              { title: "Name", dataIndex: "name", key: "name" },
+              {
+                title: "Quantity",
+                dataIndex: "quantity",
+                key: "quantity",
+              },
+              { title: "Price", dataIndex: "price", key: "price" },
+            ]}
+            dataSource={modalTableData}
+        
+          />
+              {console.log(modalTableData)}
+        </ModalBody>
+        <ModalFooter>
+          <NextButton
+            color="danger"
+            variant="light"
+            onPress={onClose}
+            className="poppins"
+          >
+            Close
+          </NextButton>
+          <NextButton color="primary" variant="flat" className="poppins">
+            <Link to={"/chat"}>Chat Now</Link>
+          </NextButton>
+        </ModalFooter>
+      </>
+    )}
+  </ModalContent>
+</Modal>
+
     </>
   );
 };

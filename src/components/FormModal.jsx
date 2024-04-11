@@ -104,32 +104,35 @@ const FormModal = () => {
         placement="top-center"
         className="poppins"
       >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Order Details
-              </ModalHeader>
-              <ModalBody>
-                <CheckOutForm confirmOrder={confirmOrder} />
-                <div className="flex  px-1 justify-between poppins">
-                  <div>Total Items:</div>
-                  <div className="text-lg font-bold"> {cartData.length}</div>
-                </div>
-                <div className="flex  px-1 justify-between poppins">
-                  <div>Delivery Charges:</div>
-                  <div className="text-lg font-bold"> ${deliveryCharges}/-</div>
-                </div>
-                <div className="flex justify-between poppins">
-                  <div>Total Price:</div>
-                  <div className="text-lg font-bold">
-                    ${calculateTotalPrice()}/-
-                  </div>
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
+       <ModalContent style={{ overflow: 'hidden' }}>
+  {() => (
+    <>
+      <ModalHeader className="flex flex-col gap-1">
+        Order Details
+      </ModalHeader>
+      <ModalBody>
+        <div className="check-out-form-container">
+          <CheckOutForm confirmOrder={confirmOrder} />
+        </div>
+        <div className="flex  px-1 justify-between poppins">
+          <div>Total Items:</div>
+          <div className="text-lg font-bold"> {cartData.length}</div>
+        </div>
+        <div className="flex  px-1 justify-between poppins">
+          <div>Delivery Charges:</div>
+          <div className="text-lg font-bold"> ${deliveryCharges}/-</div>
+        </div>
+        <div className="flex justify-between poppins">
+          <div>Total Price:</div>
+          <div className="text-lg font-bold">
+            ${calculateTotalPrice()}/-
+          </div>
+        </div>
+      </ModalBody>
+    </>
+  )}
+</ModalContent>
+
       </Modal>
     </>
   );
