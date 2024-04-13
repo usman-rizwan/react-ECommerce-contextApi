@@ -13,6 +13,7 @@ import {
   } from "@nextui-org/react";
   import { RollbackOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import ecommerceImage from "../../public/ecommerce.jpg";
 import { UnorderedListOutlined  } from "@ant-design/icons";
 import User from "../context";
 
@@ -23,10 +24,17 @@ const OrderNavbar = ({ logOut , name,path,pageName , addItems ,locate }) => {
       <Navbar shouldHideOnScroll className="bg-[#F4F4F5] poppins">
         <NavbarBrand>
           <NavbarBrand>
-            <p className="font-bold text-inherit md:text-center cursor-pointer">
-              <span className="text-red-400 hover:text-blue-500">E-Com</span>
-              <span className="text-blue-500 hover:text-red-400">merce</span>
-            </p>
+          <p className="font-bold text-inherit md:text-center cursor-pointer flex justify-center items-center gap-0">
+            <span className="w-20">
+              <img src={ecommerceImage} alt="" />
+            </span>
+            <span className="text-red-400 md:text-lg text-medium hover:text-blue-500">
+              E-Com
+            </span>
+            <span className="text-blue-500 md:text-lg text-medium hover:text-red-400">
+              merce
+            </span>
+          </p>
           </NavbarBrand>
         </NavbarBrand>
         <NavbarContent className=" sm:flex gap-4" justify="center">

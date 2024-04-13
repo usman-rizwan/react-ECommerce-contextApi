@@ -20,6 +20,7 @@ import { Link as RLink, useSearchParams } from "react-router-dom";
 import Cart from "../context/cart";
 import CartDrawer from "./CartDrawer";
 import { CarryOutOutlined } from "@ant-design/icons";
+import ecommerceImage from "../../public/ecommerce.jpg";
 export default function AppNavbar({ status, logOut }) {
   const { cart } = useContext(Cart);
   const [open, setOpen] = useState(false);
@@ -41,9 +42,16 @@ export default function AppNavbar({ status, logOut }) {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <p className="font-bold text-inherit md:text-center cursor-pointer">
-            <span className="text-red-400 hover:text-blue-500">E-Com</span>
-            <span className="text-blue-500 hover:text-red-400">merce</span>
+          <p className="font-bold text-inherit md:text-center cursor-pointer flex justify-center items-center gap-0">
+            <span className="w-20">
+              <img src={ecommerceImage} alt="" />
+            </span>
+            <span className="text-red-400 md:text-lg text-medium hover:text-blue-500">
+              E-Com
+            </span>
+            <span className="text-blue-500 md:text-lg text-medium hover:text-red-400">
+              merce
+            </span>
           </p>
         </NavbarBrand>
       </NavbarContent>
@@ -105,9 +113,15 @@ export default function AppNavbar({ status, logOut }) {
                         <p className="font-semibold">Signed in as</p>
                         <p className="font-semibold">{status.user.email}</p>
                       </DropdownItem>
-                      <DropdownItem key="My orders" className="h-14 gap-2" color="primary">
-                       <RLink to={'/orderstatus'}> <CarryOutOutlined /> My Orders
-                       </RLink>
+                      <DropdownItem
+                        key="My orders"
+                        className="h-14 gap-2"
+                        color="primary"
+                      >
+                        <RLink to={"/orderstatus"}>
+                          {" "}
+                          <CarryOutOutlined /> My Orders
+                        </RLink>
                       </DropdownItem>
 
                       <DropdownItem

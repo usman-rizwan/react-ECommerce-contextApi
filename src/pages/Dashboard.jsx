@@ -56,6 +56,8 @@ const Dashboard = () => {
           console.log(err);
           setLoading(false);
         });
+    }else{
+      fetchData()
     }
   }, [searchParams]);
 

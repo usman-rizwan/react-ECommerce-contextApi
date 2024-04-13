@@ -6,7 +6,7 @@ import OrderNavbar from "./OrderNavbar";
 const CheckOut = ({ logOut }) => {
   
   return (
-    <div>
+    <div className="w-full">
       <OrderNavbar logOut={logOut} name={"Check Out"} path={"orderstatus"} pageName={"Order Details"} />
       {<CartData />}
     </div>

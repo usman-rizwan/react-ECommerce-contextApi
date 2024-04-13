@@ -9,7 +9,7 @@ export default function PopOver({val,title}) {
       </PopoverTrigger>
       <PopoverContent>
         <div className="px-1 py-2 ">
-          <div className=" text-md " >{val}</div>
+          <div className=" text-md poppins " >{val}</div>
         </div>
       </PopoverContent>
     </Popover>

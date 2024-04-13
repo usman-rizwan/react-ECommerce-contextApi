@@ -224,7 +224,7 @@ export default function ProductModal({ id }) {
                   // onPress={() => console.log(productDetails)}
                 >
                   Add To Cart
-                </Button> : <ToolTip title={"Add To Cart "} val={"Please login to add to cart"}   />}
+                </Button> : <ToolTip title={"Add To Cart "} val={`Please login to add to cart ↑ `}   />}
               </ModalFooter>
             </>
           )}
