@@ -46,6 +46,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const category = searchParams.get("categories");
+    setLoading(true)
     if (category && category !== "all") {
       axios(`https://fakestoreapi.com/products/category/${category}`)
         .then((res) => {
