@@ -38,9 +38,13 @@ const AdminData = () => {
   const [selectedOrderState, setSelectedOrderState] = useState(null);
   const [loading, setLoading] = useState(false);
   const [scrollBehavior, setScrollBehavior] = React.useState("inside");
+
+
   useEffect(() => {
     getUserOrder();
   }, []);
+
+  // Get all users orders
   const getUserOrder = () => {
     const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -54,22 +58,28 @@ const AdminData = () => {
   // {
   //   console.log(userData , "userData<<<<<<");
   // }
+
+  // Item search
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
+  // Item reset
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
+
+  // User ordered items in table
   const showItemsModal = (items) => {
     setSelectedItems(items);
 
     const tableData = items.map((item, index) => ({
       key: index,
-      name: item.title.length > 200 ? item.title.slice(0, 50) + "..." : item.title,
+      name:
+        item.title.length > 200 ? item.title.slice(0, 50) + "..." : item.title,
       quantity: item.qty,
       image: item.image || item.imageUrl,
       price: Math.round(item.price),
@@ -78,15 +88,19 @@ const AdminData = () => {
     setModalTableData(tableData);
     onOpen();
   };
+
+  // Update user order status
   const updateOrderState = async () => {
     if (selectedOrderState !== null && selectedOrderId) {
       setLoading(true);
       const docRef = doc(db, "orders", `${selectedOrderId}`);
 
-      await updateDoc(docRef, {
-        status: selectedOrderState,
+      toast.promise(updateDoc(docRef, { status: selectedOrderState }), {
+        loading: "Updating Order Status...",
+        success: "Order Status updated !",
+        error: (err) => err.message || "Something went wrong.",
       });
-      toast.success("Order status updated successfully");
+
       console.log(
         selectedOrderId,
         selectedOrderState,
@@ -213,6 +227,8 @@ const AdminData = () => {
       ),
   });
 
+
+  // Added Columns  
   const columns = [
     {
       title: "Order Id",
@@ -279,6 +295,34 @@ const AdminData = () => {
       title: "Address",
       dataIndex: "address",
       key: "address",
+      render: (text) => {
+        // Define character limits for line break and Next Line
+        const lineBreakLimit = 30;
+        const nextLineLimit = 70;
+    
+        // Check if address exceeds the Next Line limit
+        if (text.length > nextLineLimit) {
+          return (
+            <div>
+              <div>{text.slice(0, lineBreakLimit)}</div>
+              <div>{text.slice(lineBreakLimit, nextLineLimit) + "..."}</div>
+            </div>
+          );
+        }
+        // Check if address exceeds the line break limit
+        else if (text.length > lineBreakLimit) {
+          return (
+            <div>
+              <div>{text.slice(0, lineBreakLimit)}</div>
+              <div>{text.slice(lineBreakLimit)}</div>
+            </div>
+          );
+        }
+        // If address does not exceed any limit
+        else {
+          return text;
+        }
+      },
     },
     {
       title: "Order state",
@@ -314,6 +358,7 @@ const AdminData = () => {
   ];
   return (
     <>
+    {/* Main Table */}
       <Table
         columns={columns}
         dataSource={userData}
@@ -322,59 +367,58 @@ const AdminData = () => {
         scroll={{ x: true }}
         size="small"
       />
-    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
-  <ModalContent>
-    {(onClose) => (
-      <>
-        <ModalHeader>Order Details</ModalHeader>
+      {/* Ordered items modal */}
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={scrollBehavior}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Order Details</ModalHeader>
 
-        <ModalBody>
-          <Table
-            pagination={{ pageSize: 4 }}
-            columns={[
-              {
-                title: "Image",
-                dataIndex: "image",
-                key: "image",
-                render: (image) => (
-                  <img
-                    src={image}
-                    alt="Item"
-                    style={{ width: "50px", height: "50px" }}
-                  />
-                ),
-              },
-              { title: "Name", dataIndex: "name", key: "name" },
-              {
-                title: "Quantity",
-                dataIndex: "quantity",
-                key: "quantity",
-              },
-              { title: "Price", dataIndex: "price", key: "price" },
-            ]}
-            dataSource={modalTableData}
-        
-          />
-              {console.log(modalTableData)}
-        </ModalBody>
-        <ModalFooter>
-          <NextButton
-            color="danger"
-            variant="light"
-            onPress={onClose}
-            className="poppins"
-          >
-            Close
-          </NextButton>
-          <NextButton color="primary" variant="flat" className="poppins">
-            <Link to={"/chat"}>Chat Now</Link>
-          </NextButton>
-        </ModalFooter>
-      </>
-    )}
-  </ModalContent>
-</Modal>
-
+              <ModalBody>
+                <Table
+                  pagination={{ pageSize: 4 }}
+                  columns={[
+                    {
+                      title: "Image",
+                      dataIndex: "image",
+                      key: "image",
+                      render: (image) => (
+                        <img
+                          src={image}
+                          alt="Item"
+                          style={{ width: "50px", height: "50px" }}
+                        />
+                      ),
+                    },
+                    { title: "Name", dataIndex: "name", key: "name" },
+                    {
+                      title: "Quantity",
+                      dataIndex: "quantity",
+                      key: "quantity",
+                    },
+                    { title: "Price", dataIndex: "price", key: "price" },
+                  ]}
+                  dataSource={modalTableData}
+                />
+                {console.log(modalTableData)}
+              </ModalBody>
+              <ModalFooter>
+                <NextButton
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  className="poppins"
+                >
+                  Close
+                </NextButton>
+                <NextButton color="primary" variant="flat" className="poppins">
+                  <Link to={"/chat"}>Chat Now</Link>
+                </NextButton>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
