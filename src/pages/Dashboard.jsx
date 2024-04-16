@@ -15,6 +15,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   let [searchParams, setSearchParams] = useSearchParams();
 
+
+  // Fetching all products
+
   const fetchData = useCallback(async () => {
     try {
       // Fetch products from Firestore
@@ -44,6 +47,7 @@ const Dashboard = () => {
     fetchData();
   }, [fetchData]);
 
+  // Fetching products based on categories
   useEffect(() => {
     const category = searchParams.get("categories");
     setLoading(true)
@@ -64,6 +68,8 @@ const Dashboard = () => {
 
   const user = useContext(User);
 
+
+  // Logout function
   const logOut = () => {
     signOut(auth)
       .then(() => {

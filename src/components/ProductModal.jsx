@@ -33,11 +33,13 @@ export default function ProductModal({ id }) {
   const [scrollBehavior, setScrollBehavior] = useState("inside");
   const {login } = useContext(User)
 
+  // Modal open function
   const handleOpen = (backdrop) => {
     setBackdrop(backdrop);
     onOpen();
   };
 
+// Fetching all products from db and fakeStore
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -71,6 +73,8 @@ export default function ProductModal({ id }) {
     fetchData();
   }, [fetchData]);
 
+
+  // Add selected item to cart
   const addToCartHandler = (data) => {
     console.log(data);
 

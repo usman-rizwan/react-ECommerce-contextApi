@@ -1,3 +1,4 @@
+// Next Ui config with Tailwind Css
 const { nextui } = require("@nextui-org/react");
 
 /** @type {import('tailwindcss').Config} */

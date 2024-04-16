@@ -34,6 +34,7 @@ const FormModal = () => {
     onOpen();
   };
 
+  // Calculate total order price of order
   const calculateTotalPrice = () => {
     return cartData.reduce((total, item) => {
       const itemQuantity = parseInt(item.qty);
@@ -55,7 +56,7 @@ const FormModal = () => {
       }
     }, 100);
   };
-
+// Confirm order function
   const confirmOrder = async ({ name, email, address }) => {
     console.log(name, email, address);
     const orderDetails = {
@@ -69,6 +70,7 @@ const FormModal = () => {
       status: "pending",
       timestamp: serverTimestamp(),
     };
+    //  Adding order to db
     const docRef = await addDoc(collection(db, "orders"), orderDetails);
     await updateDoc(docRef, {
       orderId: docRef.id
@@ -97,7 +99,7 @@ const FormModal = () => {
       ) : (
         ""
       )}
-
+{/* Form modal */}
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}

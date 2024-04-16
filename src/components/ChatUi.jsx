@@ -50,6 +50,8 @@ const ChatComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [value] = useDebounce(messageInputValue, 1700);
+
+  // Get all users from db
   const getAllUsers = async () => {
     let q;
     if (login.user.email === "admin@gmail.com") {
@@ -75,15 +77,20 @@ const ChatComponent = () => {
   
     
   };
+
   useEffect(() => {
     getAllUsers();
   }, []);
+
+// Searcf users
   useEffect(() => {
     const filteredUsers = userChats.filter((v) =>
       v.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredChats(filteredUsers);
   }, [userChats, searchQuery]);
+
+
   useEffect(() => {
     if (sidebarVisible) {
       setSidebarStyle({
@@ -115,6 +122,8 @@ const ChatComponent = () => {
     setSidebarStyle,
     setChatContainerStyle,
   ]);
+
+  // Generating same user id for two users 
   const chatId = (curentId) => {
     let id = "";
     if (curentUserId < curentId) {
@@ -126,6 +135,8 @@ const ChatComponent = () => {
     // console.log("curentId " , curentId)
     return id;
   };
+
+  //  Send message function
   const sendMessage = async () => {
     setMessageInputValue("");
     if (!currentChat.id) return;
@@ -161,6 +172,8 @@ const ChatComponent = () => {
       setSidebarVisible(false);
     }
   }, [sidebarVisible, setSidebarVisible]);
+
+  //  Getting All messages from db
   const getAllMessages = async () => {
     const q = query(
       collection(db, "messages"),

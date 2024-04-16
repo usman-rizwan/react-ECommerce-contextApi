@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { auth, signOut } from "../db/index";
 
-
+// Logout Function
 const logout = () => {
  
     signOut(auth)

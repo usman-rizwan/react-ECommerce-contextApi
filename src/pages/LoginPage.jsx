@@ -7,6 +7,8 @@ import LoadSpin from "../components/LoadSpin";
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
+
+  //User login function  
   let loginUser = ({ email, password }) => {
     setLoading(true);
 

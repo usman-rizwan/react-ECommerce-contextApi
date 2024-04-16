@@ -29,6 +29,8 @@ const OrderData = () => {
   useEffect(() => {
     getUserOrder();
   }, []);
+
+  // Getting users specific order
   const getUserOrder = () => {
     const uid = login.user.uid;
     const q = query(collection(db, "orders"), where("userUid", "==", `${uid}`) , orderBy("timestamp", "desc"));
@@ -41,16 +43,20 @@ const OrderData = () => {
     });
   };
 
+  // Table search 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
+   // Table reset 
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
+
+   // Ordered items modal 
   const showItemsModal = (items) => {
     setSelectedItems(items);
     
@@ -170,6 +176,8 @@ const OrderData = () => {
       ),
   });
 
+
+  // Table columns
   const columns = [
     {
       title: "Order Id",
@@ -215,7 +223,7 @@ const OrderData = () => {
         }
     
         return (
-          <span className={`${statusColor} text-white p-1 rounded`}>
+          <span className={`${statusColor} text-gray-100 p-1 rounded font-bold`}>
             {record.status}
           </span>
         );

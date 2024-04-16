@@ -39,7 +39,9 @@ const App = () => {
 
   return (
     <div>
-      <User.Provider value={{ login, setIsLogin }}>
+      {/* Updating User state using context api */}
+      <User.Provider value={{ login, setIsLogin }}> 
+      {/* Updating Cart state using context api */}
         <Cart.Provider value={{cart, setCart}}>
           <AppRouter />
           <Toaster  position="top-right" richColors  />

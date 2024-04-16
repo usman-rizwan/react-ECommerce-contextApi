@@ -32,6 +32,7 @@ const RegisterPage = () => {
 
 const [loading,setLoading] = useState(false)
 
+// New user registration function and saving user data to db
   let registerUser = ({user_name ,email,phone_number,password}) => {
     setLoading(true)
     // console.log( user_name ,email,phone_number,password);

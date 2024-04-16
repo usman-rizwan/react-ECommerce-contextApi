@@ -18,6 +18,7 @@ const AppRouter = () => {
 
   return (
     <BrowserRouter>
+    {/*   Validating user paths and ensureing saved routes */}
       <Routes>
         <Route
           path="/"
