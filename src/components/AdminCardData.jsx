@@ -33,7 +33,6 @@ const AdminDataCard = () => {
   // Delete Product
   const delProduct = async (id) => {
     try {
-      //  await deleteDoc(doc(db, "products", id));
      
       toast.promise( deleteDoc(doc(db, "products", id)), {
         loading: "Deleting...",
@@ -43,12 +42,6 @@ const AdminDataCard = () => {
     } catch (error) {
       console.log(error)
     }
-    // const deleteItem = await deleteDoc(doc(db, "products", id));
-    // toast.promise(deleteItem, {
-    //   loading: "Deleting...",
-    //   success: "Product deleted successfully!",
-    //   error: (err) => err.message || "Something went wrong.",
-    // });
 
   };
   const editProduct = (id) => {
