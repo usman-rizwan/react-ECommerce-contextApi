@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image, List, } from 'antd';
 import { Button, Chip } from '@nextui-org/react';
-import  {CheckCircleOutlined} from '@ant-design/icons';
 import FormModal from './FormModal';
 const CartData = () => {
   const [cartData, setCartData] = useState([]);

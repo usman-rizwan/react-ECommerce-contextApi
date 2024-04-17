@@ -1,13 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import AppNavbar from "../components/Navbar";
-import User from "../context";
-import { auth, signOut } from "../db/index";
+import User from "../context";;
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
 import { message } from "antd";
 import { useSearchParams } from "react-router-dom";
 import CardSpacer from "../components/CardSpacer";
-import { collection, addDoc, getDocs } from "../db/index";
+import { collection, getDocs, auth, signOut } from "../db/index";
 import { db } from "../db/index";
 
 const Dashboard = () => {

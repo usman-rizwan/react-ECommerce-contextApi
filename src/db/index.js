@@ -19,8 +19,14 @@ import {
   getDocs,
   updateDoc,
   orderBy,
+  deleteDoc,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBQ4kGo7ysAnwrwptf7b3-NpZYWQm6jqSw",
@@ -53,8 +59,12 @@ export {
   where,
   onSnapshot,
   getDocs,
+  deleteDoc,
   updateDoc,
-  orderBy ,
+  orderBy,
   storage,
-  getStorage, ref, uploadBytesResumable, getDownloadURL 
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
 };
