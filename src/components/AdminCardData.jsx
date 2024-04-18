@@ -30,11 +30,10 @@ const AdminDataCard = () => {
 
 
 
-  // Delete Product
+  // Delete Product From Firestore
   const delProduct = async (id) => {
     try {
-     
-      toast.promise( deleteDoc(doc(db, "products", id)), {
+      toast.promise(deleteDoc(doc(db, "products", id)), {
         loading: "Deleting...",
         success: "Product deleted successfully!",
         error: (err) => err.message || "Something went wrong.",
@@ -44,12 +43,19 @@ const AdminDataCard = () => {
     }
 
   };
+
+  // Edit Products In Firestore
   const editProduct = (id) => {
     console.log(id)
   };
+
+
+  
   useEffect(() => {
     getProducts();
   }, [delProduct]);
+
+
   return (
     <div className="flex flex-wrap justify-center">
       {loading ? (
@@ -76,8 +82,14 @@ const AdminDataCard = () => {
                 <div className="border-t border-gray-300 my-4"></div>
                 <div className="overflow-y-auto overflow-x-hidden h-[150px]">
                   <h1 className="text-lg font-bold mt-2 poppins">{value.title.length > 150 ? value.title.slice(0, 180) + "..." : value.title}</h1>
-                  <p className="mt-5 text-medium poppins">{value.description}</p>
+                  {value.description.match(/.{1,54}/g).map((desc, index) => (
+                    <div key={index}>
+                      {desc}
+                      <br />
+                    </div>
+                  ))}
                 </div>
+
               </Card>
             </div>
           ))
