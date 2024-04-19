@@ -12,6 +12,7 @@ import {
   addDoc,
   db,
   updateDoc,
+  serverTimestamp,
 } from "../db/index.js";
 import { toast } from "sonner";
 
@@ -118,6 +119,7 @@ const MyForm = () => {
               price: data.price,
               quantity: Number(data.quantity) ,
               category: data.category,
+              timestamp: serverTimestamp(),
               imageUrl: imageUrl,
             };
 
