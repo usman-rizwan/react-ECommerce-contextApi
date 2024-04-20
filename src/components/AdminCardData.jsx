@@ -2,23 +2,24 @@ import React, { useCallback, useEffect, useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Card, Image } from "antd";
 import { collection, getDocs, db, doc, deleteDoc } from "../db/index";
-import "./style.scss"
+import "./style.scss";
 import LoadSpin from "./LoadSpin";
 import { toast } from "sonner";
 import EmptyCart from "./EmptyCart";
+import AdminEditModal from "./AdminEditModal";
 
 const AdminDataCard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getProducts = useCallback(async () => {
     try {
-      // Fetch products from Firestore
       const firestoreProducts = [];
       const querySnapshot = await getDocs(collection(db, "products"));
       querySnapshot.forEach((doc) => {
-        firestoreProducts.push(doc.data());
-        // console.log(doc.data());
+        firestoreProducts.push({ id: doc.id, ...doc.data() });
       });
       setProducts(firestoreProducts);
       setLoading(false);
@@ -28,9 +29,6 @@ const AdminDataCard = () => {
     }
   }, []);
 
-
-
-  // Delete Product From Firestore
   const delProduct = async (id) => {
     try {
       toast.promise(deleteDoc(doc(db, "products", id)), {
@@ -39,22 +37,23 @@ const AdminDataCard = () => {
         error: (err) => err.message || "Something went wrong.",
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   };
 
-  // Edit Products In Firestore
-  const editProduct = (id) => {
-    console.log(id)
+  const editProduct = (product) => {
+    setSelectedProduct(product);
+    setModalVisible(true);
   };
 
+  const closeModal = () => {
+    setSelectedProduct(null);
+    setModalVisible(false);
+  };
 
-  
   useEffect(() => {
     getProducts();
   }, [delProduct]);
-
 
   return (
     <div className="flex flex-wrap justify-center">
@@ -68,7 +67,7 @@ const AdminDataCard = () => {
                 className="w-full h-full"
                 actions={[
                   <span key="delete" onClick={() => delProduct(value.id)} className="text-red-400 text-lg cursor-pointer"><DeleteOutlined /></span>,
-                  <span key="edit" onClick={() => editProduct(value.id)} className="text-blue-400 text-lg cursor-pointer"><EditOutlined /></span>,
+                  <span key="edit" className="text-blue-400 text-lg cursor-pointer" onClick={() => editProduct(value)}><EditOutlined /></span>,
                 ]}
               >
                 <div className="flex justify-center items-center max-h-[200px] overflow-hidden">
@@ -81,15 +80,17 @@ const AdminDataCard = () => {
                 </div>
                 <div className="border-t border-gray-300 my-4"></div>
                 <div className="overflow-y-auto overflow-x-hidden h-[150px]">
-                  <h1 className="text-lg font-bold mt-2 poppins">{value.title.length > 150 ? value.title.slice(0, 180) + "..." : value.title}</h1>
-                  {value.description.match(/.{1,54}/g).map((desc, index) => (
-                    <div key={index}>
-                      {desc}
+               <span className="text-lg font-medium mt-2 poppins"> <span className="font-bold "> TITLE :</span>  {value.title.length > 150 ? value.title.slice(0, 180) + "..." : value.title}</span>
+                  <br/>
+                  <div className="border-t border-gray-300 my-1"></div>
+                  <span className="font-bold text-lg"> Description :</span>
+                  {value.description.match(/.{1,30}/g).map((desc, index) => (
+                    <div key={index} className="poppins text-base">
+                       {desc}
                       <br />
                     </div>
                   ))}
                 </div>
-
               </Card>
             </div>
           ))
@@ -97,8 +98,8 @@ const AdminDataCard = () => {
           <EmptyCart description={"No products posted yet :( "} show={"none"} />
         )
       )}
+      <AdminEditModal visible={modalVisible} onClose={closeModal} product={selectedProduct} />
     </div>
-
   );
 };
 
