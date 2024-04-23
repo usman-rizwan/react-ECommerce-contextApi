@@ -23,6 +23,7 @@ const AdminDataCard = () => {
       });
       setProducts(firestoreProducts);
       setLoading(false);
+      console.log("chala")
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -36,6 +37,9 @@ const AdminDataCard = () => {
         success: "Product deleted successfully!",
         error: (err) => err.message || "Something went wrong.",
       });
+
+      getProducts()
+      console.log("funcyion call");
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +57,7 @@ const AdminDataCard = () => {
 
   useEffect(() => {
     getProducts();
-  }, [delProduct]);
+  }, []);
 
   return (
     <div className="flex flex-wrap justify-center">
