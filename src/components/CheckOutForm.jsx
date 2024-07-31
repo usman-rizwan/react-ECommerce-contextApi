@@ -8,7 +8,7 @@ const { TextArea } = Input;
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
-const CheckOutForm = ({ confirmOrder }) => {
+const CheckOutForm = ({ confirmOrder ,loading }) => {
   const { login } = useContext(User);
 
   return (
@@ -99,9 +99,10 @@ const CheckOutForm = ({ confirmOrder }) => {
             <Button
               type="primary"
               htmlType="submit"
+              disabled={loading}
               className="login-form-button bg-blue-500 text-white mt-18 text-md poppins"
             >
-              Confirm Now
+             {loading ? "Please wait ...":" Confirm Now"}
             </Button>
           </Form.Item>
         </Form>
